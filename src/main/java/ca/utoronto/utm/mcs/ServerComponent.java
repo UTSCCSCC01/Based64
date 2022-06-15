@@ -1,12 +1,10 @@
 package ca.utoronto.utm.mcs;
-
-import dagger.Component;
 import javax.inject.Singleton;
-
+import dagger.Component;
 @Singleton
-// TODO Uncomment The Line Below When You Have Implemented ServerModule 
-// @Component(modules = ServerModule.class)
+@Component(modules = ServerModule.class)
 public interface ServerComponent {
-
 	public Server buildServer();
 }
+
+
