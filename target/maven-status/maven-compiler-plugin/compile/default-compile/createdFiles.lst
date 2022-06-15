@@ -1,6 +1,5 @@
 ca/utoronto/utm/mcs/ReqHandlerModule_ProvideNeo4jDAOFactory.class
 ca/utoronto/utm/mcs/DaggerReqHandlerComponent$Builder.class
-ca/utoronto/utm/mcs/ReqHandler_Factory.class
 ca/utoronto/utm/mcs/ReqHandlerComponent.class
 ca/utoronto/utm/mcs/DaggerServerComponent$Builder.class
 ca/utoronto/utm/mcs/ReqHandler.class
