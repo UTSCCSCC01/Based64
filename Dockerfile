@@ -5,4 +5,4 @@ COPY . ./
 RUN mvn verify clean --fail-never
 RUN mvn compile; sleep 15
 ENTRYPOINT [ "mvn","exec:java" ]
-EXPOSE 8000
+EXPOSE 8000 

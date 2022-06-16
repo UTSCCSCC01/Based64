@@ -13,6 +13,7 @@ public class Server {
 		this.reqHandler = reqHandler;
 		this.server = null;
 	}
+	
 	public void setupServer() {
 		try {
 			this.server = HttpServer.create(new InetSocketAddress(this.config.hostname, this.config.port), this.config.backlog);
