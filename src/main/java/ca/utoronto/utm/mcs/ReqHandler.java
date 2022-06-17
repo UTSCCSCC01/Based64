@@ -11,6 +11,8 @@ public class ReqHandler implements HttpHandler {
         this.neodao = neodao;
     }
 	
+	
+	
     // TODO (finish the class below to cover all cases):
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -21,32 +23,36 @@ public class ReqHandler implements HttpHandler {
 	            switch (exchange.getRequestMethod()) {
 	                case "GET":
                     	if (uriParts[2] == "getActor") {
-                    		getActor(exchange);
+                    		this.getActor(exchange);
+                    		return;
                     	} else if (uriParts[2] == "getMovie") {
-                    		getMovie(exchange);
+                    		this.getMovie(exchange);
+                    		return;
                     	} else if (uriParts[2] == "hasRelationship") {
-                    		hasRelationship(exchange);
+                    		this.hasRelationship(exchange);
+                    		return;
                     	} else if (uriParts[2] == "computeBaconNumber") {
-                    		computeBaconNumber(exchange);
+                    		this.computeBaconNumber(exchange);
+                    		return;
                     	} else if (uriParts[2] == "computeBaconPath") {
-                    		computeBaconPath(exchange);
+                    		this.computeBaconPath(exchange);
+                    		return;
                     	}
-	                    break;
 	                case "POST":
 	                    //this.handlePost(exchange);
-	                    break;
 	                default:
-	                    break;
+	                	exchange.sendResponseHeaders(500, -1);
+	                    return;
 	            }
             } else {
-            	e.printStackTrace();
-                exchange.sendResponseHeaders(500, -1);
+            	exchange.sendResponseHeaders(500, -1);
+                return;
             }
         } catch (Exception e) {
+        	exchange.sendResponseHeaders(500, -1);
             e.printStackTrace();
         }
     }
-    
     /** Add Movie
      * This endpoint is to add a movie node into the database
      * @param movieId
@@ -57,9 +63,7 @@ public class ReqHandler implements HttpHandler {
                 - 500 INTERNAL SERVER ERROR - If save or add was unsuccessful 
                   (Java Exception Thrown)
      */
-	
     public int addMovie(String movieId, String name){
-
         // try () {
             // if ()
                 // return 400 on fail
@@ -70,10 +74,8 @@ public class ReqHandler implements HttpHandler {
             // catch error
                 // return 500 on INTERNAL SERVER ERROR
         // }
-
         return 1;
     }
-    
     /**
  	GET /api/v1/getActor
 	@param none
@@ -138,6 +140,8 @@ public class ReqHandler implements HttpHandler {
 	public void computeBaconPath(HttpExchange exchange) throws IOException, JSONException {
 		// TODO
 	}
+	
+	
 	
 }
 

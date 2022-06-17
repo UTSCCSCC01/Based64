@@ -19,6 +19,8 @@ public class Neo4jDAO {
         this.session = this.driver.session();
     }
 
+    
+    
     // TODO (CRUD operations, where the following function is an example of the format):
     public void insertItem(String name) {
         String query;
@@ -27,6 +29,8 @@ public class Neo4jDAO {
         this.session.run(query);
         return;
     }
+    
+    
     
 }
 
