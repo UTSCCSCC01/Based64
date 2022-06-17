@@ -15,33 +15,32 @@ public class ReqHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
     	try {
-            switch (exchange.getRequestMethod()) {
-                case "GET":
-                    //this.handleGet(exchange);
-                	String uri = exchange.getRequestURI().toString();
-                    String[] uriParts = uri.split("/");
-                    if (uriParts.length == 3 && uriParts[0] == "api" && uriParts[1] == "v1") {
+    		String uri = exchange.getRequestURI().toString();
+            String[] uriParts = uri.split("/");
+            if (uriParts.length == 3 && uriParts[0] == "api" && uriParts[1] == "v1") {
+	            switch (exchange.getRequestMethod()) {
+	                case "GET":
                     	if (uriParts[2] == "getActor") {
-                    		getActor();
+                    		getActor(exchange);
                     	} else if (uriParts[2] == "getMovie") {
-                    		getMovie();
+                    		getMovie(exchange);
                     	} else if (uriParts[2] == "hasRelationship") {
-                    		hasRelationship();
+                    		hasRelationship(exchange);
                     	} else if (uriParts[2] == "computeBaconNumber") {
-                    		computeBaconNumber();
+                    		computeBaconNumber(exchange);
                     	} else if (uriParts[2] == "computeBaconPath") {
-                    		computeBaconPath();
+                    		computeBaconPath(exchange);
                     	}
-                    } else {
-                    	e.printStackTrace();
-                        exchange.sendResponseHeaders(500, -1);
-                    }
-                    break;
-                case "POST":
-                    //this.handlePost(exchange);
-                    break;
-                default:
-                    break;
+	                    break;
+	                case "POST":
+	                    //this.handlePost(exchange);
+	                    break;
+	                default:
+	                    break;
+	            }
+            } else {
+            	e.printStackTrace();
+                exchange.sendResponseHeaders(500, -1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +83,7 @@ public class ReqHandler implements HttpHandler {
 	Check if an actor exists in the db.
 	Edge case: return an empty list of movies for the response if the actor exists but didn't act in any movies (ex. {"actorId": "nm1001234", "name": "Sharlto Copley", "movies": []})
     */
-    public void getActor() {
+    public void getActor(HttpExchange exchange) throws IOException, JSONException {
     	// TODO
     	// ex. this.neodao.getActor(@param_body) // where cypher query is done
     }
@@ -97,7 +96,7 @@ public class ReqHandler implements HttpHandler {
 	Check if a movie exists in the db.
 	Edge case: return an empty list of actors for the response if the movie exists but no one acted in it (ex. {"movieId": "nm1001234", "name": "Chappie", "actors": []})
     */
-    public void getMovie() {
+    public void getMovie(HttpExchange exchange) throws IOException, JSONException {
     	// TODO
     }
     /**
@@ -109,7 +108,7 @@ public class ReqHandler implements HttpHandler {
 	Check if there exists a relationship between an actor and a movie.
 	Edge case: none
     */
-	public void hasRelationship() {
+	public void hasRelationship(HttpExchange exchange) throws IOException, JSONException {
 		// TODO
 	}
     /**
@@ -121,7 +120,7 @@ public class ReqHandler implements HttpHandler {
 	Check the bacon number of an actor. Note that Kevin Bacon has a bacon number of 0.
 	Edge case: none
     */
-	public void computeBaconNumber() {
+	public void computeBaconNumber(HttpExchange exchange) throws IOException, JSONException {
 		// TODO
 	}
     /**
@@ -136,7 +135,7 @@ public class ReqHandler implements HttpHandler {
 	2) for an actor with multiple baconPaths with the same baconNumbers, just return 1 of the baconPaths
 	3) Kevin Bacon's baconPath should be a list with just his actorId in it
     */
-	public void computeBaconPath() {
+	public void computeBaconPath(HttpExchange exchange) throws IOException, JSONException {
 		// TODO
 	}
 	
