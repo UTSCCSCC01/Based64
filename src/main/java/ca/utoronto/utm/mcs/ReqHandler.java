@@ -3,7 +3,10 @@ import com.sun.net.httpserver.HttpHandler;
 import javax.inject.Inject;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
+import java.io.OutputStream;
+
 import org.json.JSONException;
+import org.json.JSONObject;
 public class ReqHandler implements HttpHandler {
 	private Neo4jDAO neodao;
 	@Inject
@@ -19,7 +22,7 @@ public class ReqHandler implements HttpHandler {
     	try {
     		String uri = exchange.getRequestURI().toString();
             String[] uriParts = uri.split("/");
-            if (uriParts.length == 3 && uriParts[0] == "api" && uriParts[1] == "v1") {
+            if (uriParts.length() == 3 && uriParts[0] == "api" && uriParts[1] == "v1") {
 	            switch (exchange.getRequestMethod()) {
 	                case "GET":
                     	if (uriParts[2] == "getActor") {
@@ -86,8 +89,58 @@ public class ReqHandler implements HttpHandler {
 	Edge case: return an empty list of movies for the response if the actor exists but didn't act in any movies (ex. {"actorId": "nm1001234", "name": "Sharlto Copley", "movies": []})
     */
     public void getActor(HttpExchange exchange) throws IOException, JSONException {
-    	// TODO
-    	// ex. this.neodao.getActor(@param_body) // where cypher query is done
+    	try {
+    		// check for 400:
+    		String reqBody = Utils.convert(exchange.getRequestBody());
+    		JSONObject deserReqBody = new JSONObject(reqBody);
+    		String reqActorId;
+    		if (deserReqBody.length() == 1 && deserReqBody.has("actorId")) {
+    			reqActorId = deserReqBody.getString("actorId");
+    		} else {
+                exchange.sendResponseHeaders(400, -1); // -1 indicates this response has no body
+                return;
+            }
+    		// check for 200, 404:
+    		try {
+    			String queryResult = this.neodao.getActor(reqActorId); // the query return stringified json obj
+    			// TODO: parse query's result:
+    			
+    			
+    			
+    			JSONObject deserResBody = new JSONObject(resBody);
+        		String resActorId, resName, resMoviesStr;
+        		JSONArray resMovies;
+        		if (deserResBody.length() == 3 && deserReqBody.has("actorId") && deserReqBody.has("name") && deserReqBody.has("movies")) {
+        			resActorId = deserResBody.getString("actorId");
+        			resName = deserResBody.getString("name");
+        			resMoviesStr = deserResBody.getString("movies");
+        			JSONArray resMovies = new JSONArray(resMoviesStr);
+        			
+        			/*
+                    String pokemon_name = this.dao.getPokemon(pid);
+                    r.sendResponseHeaders(200, pokemon_name.length());
+                    OutputStream os = r.getResponseBody();
+                    os.write(pokemon_name.getBytes());
+                    os.close();
+                    */
+        			
+        			
+        			
+        		} else {
+                    exchange.sendResponseHeaders(404, -1); // -1 indicates this response has no body
+                    return;
+                }
+            } catch (Exception e) {
+                exchange.sendResponseHeaders(500, -1);
+                e.printStackTrace();
+                return;
+            }
+            exchange.sendResponseHeaders(200, -1);
+        } catch (Exception e) {
+        	exchange.sendResponseHeaders(500, -1);
+            e.printStackTrace();
+            return;
+        }
     }
     /**
 	GET /api/v1/getMovie
