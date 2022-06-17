@@ -1,10 +1,10 @@
+ca/utoronto/utm/mcs/ServerModule_ProvideServerFactory.class
 ca/utoronto/utm/mcs/ReqHandlerModule_ProvideNeo4jDAOFactory.class
+ca/utoronto/utm/mcs/Neo4jDAO_Factory.class
 ca/utoronto/utm/mcs/DaggerReqHandlerComponent$Builder.class
 ca/utoronto/utm/mcs/ReqHandlerComponent.class
 ca/utoronto/utm/mcs/DaggerServerComponent$Builder.class
 ca/utoronto/utm/mcs/ReqHandler.class
-ca/utoronto/utm/mcs/ServerModule_ProvideReqHandlerFactory.class
-ca/utoronto/utm/mcs/ServerModule_ProvideConfigFactory.class
 ca/utoronto/utm/mcs/Utils.class
 ca/utoronto/utm/mcs/DaggerServerComponent.class
 ca/utoronto/utm/mcs/DaggerReqHandlerComponent.class
