@@ -2,23 +2,17 @@ package ca.utoronto.utm.mcs;
 import org.neo4j.driver.*;
 // NOTE: all your db transactions or queries should go in this class
 public class Neo4jDAO {
-	private final Session session;
     private final Driver driver;
-
+    // Constructor
     public Neo4jDAO(String uriDb, String username, String password) {
-        this.driver = GraphDatabase.driver(uriDb, AuthTokens.basic(username, password));
-        this.session = this.driver.session();
+        this.driver = GraphDatabase.driver(uriDb, AuthTokens.basic(username, password));   
     }
 
-    // TODO (CRUD operations, where the following function is an example of the format):
-    public void insertItem(String name) {
-        String query;
-        query = "CREATE (n:pokemon {name: \"%s\"})";
-        query = String.format(name);
-        this.session.run(query);
-        return;
-    }
-    
+
+    // _______________________________________________
+    // Put Requests
+    // _______________________________________________
+
     /** Add Movie
      * This endpoint is to add a movie node into the database
      * @param movieId
@@ -31,18 +25,25 @@ public class Neo4jDAO {
      */
     public int addMovie(String movieId, String name){
 
-        // try () {
-            // if ()
-                // return 400 on fail
-            // else (pass)
-                // return 200 on pass
-        // }
-        // catch(Exception e){
-            // catch error
-                // return 500 on INTERNAL SERVER ERROR
-        // }
-
-        return 1;
+        try (Session session = this.driver.session()) {
+            try(Transaction tx = session.beginTransaction()){
+                if (checkDatabase(movieId, 1 ) == 1){
+                    return 400;
+                }
+                String query = "CREATE (m: Movie {name: '%s', id:'%s'})".formatted(name, movieId);
+                tx.run(query);
+                tx.commit();
+                return 200;
+                
+            }catch(Exception e1){
+                e1.printStackTrace();
+                return 500;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return 500;
+        }
     }
     
     /** Add Actor
@@ -57,18 +58,25 @@ public class Neo4jDAO {
      */
     public int addActor(String name, String actorId){
 
-        // try () {
-            // if ()
-                // return 400 on fail
-            // else (pass)
-                // return 200 on pass
-        // }
-        // catch(Exception e){
-            // catch error
-                // return 500 on INTERNAL SERVER ERROR
-        // }
-
-        return 1;
+        try (Session session = this.driver.session()) {
+            try(Transaction tx = session.beginTransaction()){
+                if (checkDatabase(actorId, 0 ) == 1){
+                    return 400;
+                }
+                String query = "CREATE (m: Actor {name: '%s', id:'%s'})".formatted(name, actorId);
+                tx.run(query);
+                tx.commit();
+                return 200;
+                
+            }catch(Exception e1){
+                e1.printStackTrace();
+                return 500;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return 500;
+        }
     }
     
     /** Add Relationship
@@ -86,22 +94,69 @@ public class Neo4jDAO {
      */
     public int addRelationship(String actorId, String movieId){
 
-        // try () {
-            // if (actor or movie not present)
-                // return 404 on fail
-            // else ()
-                // if (fail)
-                    // return 400
-                // else
-                    // return 200 on pass
-        // }
-        // catch(Exception e){
-            // catch error
-                // return 500 on INTERNAL SERVER ERROR
-        // }
-        return 1;
+        try (Session session = this.driver.session()){
+            try(Transaction tx = session.beginTransaction()){
+                if (checkDatabase(actorId, 0 ) == 1 || checkDatabase(movieId, 1 ) == 1){
+                    return 400;
+                }
+                String query = "MATCH (a: Actor), (m: Movie) WHERE a.id = %s AND m.id = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
+                tx.run(query);
+                tx.commit();
+                return 200;
+                
+            }catch(Exception e1){
+                e1.printStackTrace();
+                return 500;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return 500;
+        }
 
     }
+    // ________________________________________________ 
+    // Put Helper functions
+    // ________________________________________________ 
+    private int checkDatabase(String id, int actorOrMovie ){
+        // Actor => actorOrMovie = 0
+        // Movie => actorOrMovie = 1
+        try(Session session = driver.session()){
+            try(Transaction tx = session.beginTransaction()){
+                String query;
+                if (actorOrMovie == 0){
+                    query = "MATCH (a: Actor) WHERE a.id = '%s' RETURN a".formatted(id);
+                }else{
+                    query = "MATCH (m: Movie) WHERE m.id = '%s' RETURN a".formatted(id);
+                }
+                boolean x = tx.run(query).hasNext();
+                tx.commit();
+                if (x)
+                    return 0;
+                return 1;
+                
+            }
+            catch(Exception e1){
+                e1.printStackTrace();
+                return 500;
+            }
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return 500;
+        }
+
+    }
+    
+
+
+
+
+
+    // Get Requests
+
+    
 
 
 
