@@ -25,7 +25,7 @@ public class ServerModule {
 		final String hostname = "0.0.0.0";
 		final int backlog = 0;
 		final String contextPath = "/api";
-		ReqHandlerComponent reqHandlerComponent = DaggerReqHandlerComponent.create();
+		// ReqHandlerComponent reqHandlerComponent = DaggerReqHandlerComponent.create();
 		ReqHandler reqHandler = reqHandlerComponent.buildHandler();
 		try {
 			HttpServer server = HttpServer.create(new InetSocketAddress(hostname, port), backlog);

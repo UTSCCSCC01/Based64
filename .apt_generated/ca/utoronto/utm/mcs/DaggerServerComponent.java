@@ -30,7 +30,7 @@ public final class DaggerServerComponent implements ServerComponent {
 
   @Override
   public Server buildServer() {
-    return new Server(ServerModule_ProvideConfigFactory.provideConfig(serverModule), ServerModule_ProvideReqHandlerFactory.provideReqHandler(serverModule));
+    return new Server(ServerModule_ProvideServerFactory.provideServer(serverModule));
   }
 
   public static final class Builder {

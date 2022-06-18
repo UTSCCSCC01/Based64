@@ -1,2 +1,4 @@
 /target/
 /bin/
+.apt_generated/ca/utoronto/utm/mcs/ReqHandlerModule_ProvideNeo4jDAOFactory.java
+.apt_generated/ca/utoronto/utm/mcs/*.java

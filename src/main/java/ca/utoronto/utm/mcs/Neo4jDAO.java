@@ -12,22 +12,12 @@ public class Neo4jDAO {
     }
     */
 	private final Driver driver;
-	private final Session session;
     @Inject
     public Neo4jDAO(Driver driver) {
         this.driver = driver;
-        this.session = this.driver.session();
     }
 
-    // TODO (CRUD operations, where the following function is an example of the format):
-    public void insertItem(String name) {
-        String query;
-        query = "CREATE (n:pokemon {name: \"%s\"})";
-        query = String.format(name);
-        this.session.run(query);
-        return;
-    }
-    
+
 }
 
 

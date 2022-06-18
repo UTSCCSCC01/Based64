@@ -1,5 +1,6 @@
 package ca.utoronto.utm.mcs;
 
+import com.sun.net.httpserver.HttpServer;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import javax.annotation.processing.Generated;
@@ -15,26 +16,22 @@ import javax.inject.Provider;
     "rawtypes"
 })
 public final class Server_Factory implements Factory<Server> {
-  private final Provider<Config> configProvider;
+  private final Provider<HttpServer> serverProvider;
 
-  private final Provider<ReqHandler> reqHandlerProvider;
-
-  public Server_Factory(Provider<Config> configProvider, Provider<ReqHandler> reqHandlerProvider) {
-    this.configProvider = configProvider;
-    this.reqHandlerProvider = reqHandlerProvider;
+  public Server_Factory(Provider<HttpServer> serverProvider) {
+    this.serverProvider = serverProvider;
   }
 
   @Override
   public Server get() {
-    return newInstance(configProvider.get(), reqHandlerProvider.get());
+    return newInstance(serverProvider.get());
   }
 
-  public static Server_Factory create(Provider<Config> configProvider,
-      Provider<ReqHandler> reqHandlerProvider) {
-    return new Server_Factory(configProvider, reqHandlerProvider);
+  public static Server_Factory create(Provider<HttpServer> serverProvider) {
+    return new Server_Factory(serverProvider);
   }
 
-  public static Server newInstance(Config config, ReqHandler reqHandler) {
-    return new Server(config, reqHandler);
+  public static Server newInstance(HttpServer server) {
+    return new Server(server);
   }
 }
