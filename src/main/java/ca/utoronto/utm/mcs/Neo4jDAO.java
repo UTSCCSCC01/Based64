@@ -23,7 +23,7 @@ public class Neo4jDAO {
                 - 500 INTERNAL SERVER ERROR - If save or add was unsuccessful 
                   (Java Exception Thrown)
      */
-    public int addMovie(String movieId, String name){
+    public int addMovie(String name, String movieId){
 
         try (Session session = this.driver.session()) {
             try(Transaction tx = session.beginTransaction()){
