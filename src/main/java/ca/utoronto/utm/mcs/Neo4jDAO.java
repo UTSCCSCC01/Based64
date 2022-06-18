@@ -64,7 +64,7 @@ public class Neo4jDAO {
     public String hasRelationship(String reqMovieId, String reqActorId) {
     	// TODO:
     	String query;
-        query = "...;"; // TODO: the query should check if the given actor acted in the given movie (node label should be r)
+        query = "MATCH (m {movieId: \"%s\"}), (a {actorId: \"%s\"}) RETURN m.movieId, a.actorId, EXISTS((m)<-[:ACTED_IN]-(a));";
         query = String.format(query, reqMovieId, reqActorId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();

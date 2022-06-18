@@ -155,6 +155,8 @@ public class ReqHandler implements HttpHandler {
 	@return 200 OK (success), 400 BAD REQUEST (req body is improperly formatted OR missing req info), 404 NOT FOUND (when the relationship DNE for the req), 500 INTERNAL SERVER ERROR [failure (i.e. Java exception thrown)]
 	Check if there exists a relationship between an actor and a movie.
 	Edge case: none
+	Try: `curl -v -X GET -d '{"movieId": "1", "actorId": "1"}' http://localhost:8081/api/v1/hasRelationship`
+	Try: `curl -v -X GET -d '{"movieId": "3", "actorId": "1"}' http://localhost:8081/api/v1/hasRelationship`
     */
 	public void hasRelationship(HttpExchange exchange) throws IOException, JSONException {
 		try {
@@ -174,8 +176,8 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.hasRelationship(reqMovieId, reqActorId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resHasRelationshipStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("r.movieId") && deserResBody.has("r.actorId") && deserResBody.has("r.hasRelationship")) {
-        			resHasRelationshipStr = deserResBody.getString("r.hasRelationship");
+        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("a.actorId") && deserResBody.has("EXISTS((m)<-[:ACTED_IN]-(a))")) {
+        			resHasRelationshipStr = deserResBody.getString("EXISTS((m)<-[:ACTED_IN]-(a))");
                     exchange.sendResponseHeaders(200, resHasRelationshipStr.length());
                     OutputStream os = exchange.getResponseBody();
                     os.write(resHasRelationshipStr.getBytes());
