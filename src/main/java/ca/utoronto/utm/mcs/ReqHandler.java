@@ -63,7 +63,7 @@ public class ReqHandler implements HttpHandler {
 	@return 200 OK (success), 400 BAD REQUEST (req body is improperly formatted OR missing req info), 404 NOT FOUND (when the actor DNE for the req), 500 INTERNAL SERVER ERROR [failure (i.e. Java exception thrown)]
 	Check if an actor exists in the db.
 	Edge case: return an empty list of movies for the response if the actor exists but didn't act in any movies (ex. {"actorId": "nm1001234", "name": "Sharlto Copley", "movies": []})
-	Try: `curl -v -X GET -d '{"actorId": "101"}' http://localhost:8081/api/v1/getActor`
+	Try: `curl -v -X GET -d '{"actorId": "1"}' http://localhost:8081/api/v1/getActor`
     */
     public void getActor(HttpExchange exchange) throws IOException, JSONException {
     	try {
@@ -82,8 +82,8 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.getActor(reqActorId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resMoviesStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("a.movies")) {
-        			resMoviesStr = deserResBody.getString("a.movies");
+        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("collect(m.name)")) {
+        			resMoviesStr = deserResBody.getString("collect(m.name)");
                     exchange.sendResponseHeaders(200, resMoviesStr.length());
                     OutputStream os = exchange.getResponseBody();
                     os.write(resMoviesStr.getBytes());
@@ -109,7 +109,7 @@ public class ReqHandler implements HttpHandler {
 	@return 200 OK (success), 400 BAD REQUEST (req body is improperly formatted OR missing req info), 404 NOT FOUND (when the movie DNE for the req), 500 INTERNAL SERVER ERROR [failure (i.e. Java exception thrown)]
 	Check if a movie exists in the db.
 	Edge case: return an empty list of actors for the response if the movie exists but no one acted in it (ex. {"movieId": "nm1001234", "name": "Chappie", "actors": []})
-	Try: `curl -v -X GET -d '{"movieId": "aba"}' http://localhost:8081/api/v1/getMovie`
+	Try: `curl -v -X GET -d '{"movieId": "3"}' http://localhost:8081/api/v1/getMovie`
     */
     public void getMovie(HttpExchange exchange) throws IOException, JSONException {
     	try {
@@ -128,8 +128,8 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.getMovie(reqMovieId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resActorsStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("m.actors")) {
-        			resActorsStr = deserResBody.getString("m.actors");
+        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("collect(a.name)")) {
+        			resActorsStr = deserResBody.getString("collect(a.name)");
                     exchange.sendResponseHeaders(200, resActorsStr.length());
                     OutputStream os = exchange.getResponseBody();
                     os.write(resActorsStr.getBytes());
@@ -157,7 +157,41 @@ public class ReqHandler implements HttpHandler {
 	Edge case: none
     */
 	public void hasRelationship(HttpExchange exchange) throws IOException, JSONException {
-		// TODO
+		try {
+    		// check for 400:
+    		String reqBody = Utils.convert(exchange.getRequestBody());
+    		JSONObject deserReqBody = new JSONObject(reqBody);
+    		String reqMovieId, reqActorId;
+    		if (deserReqBody.length() == 2 && deserReqBody.has("movieId") && deserReqBody.has("actorId")) {
+    			reqMovieId = deserReqBody.getString("movieId");
+    			reqActorId = deserReqBody.getString("actorId");
+    		} else {
+                exchange.sendResponseHeaders(400, -1); // -1 indicates this response has no body
+                return;
+            }
+    		// check for 200, 404:
+    		try {
+    			String queryResult = this.neodao.hasRelationship(reqMovieId, reqActorId);
+    			JSONObject deserResBody = new JSONObject(queryResult);
+        		String resHasRelationshipStr;
+        		if (deserResBody.length() == 3 && deserResBody.has("r.movieId") && deserResBody.has("r.actorId") && deserResBody.has("r.hasRelationship")) {
+        			resHasRelationshipStr = deserResBody.getString("r.hasRelationship");
+                    exchange.sendResponseHeaders(200, resHasRelationshipStr.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(resHasRelationshipStr.getBytes());
+                    os.close();
+        		} else {
+                    exchange.sendResponseHeaders(500, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                exchange.sendResponseHeaders(404, -1);
+                return;
+            }
+        } catch (Exception e) {
+        	exchange.sendResponseHeaders(500, -1);
+            return;
+        }
 	}
     /**
 	GET /api/v1/computeBaconNumber

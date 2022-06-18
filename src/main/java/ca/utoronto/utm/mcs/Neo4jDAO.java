@@ -29,7 +29,7 @@ public class Neo4jDAO {
     // TODO (CRUD operations, where the following function is an example of the format):
     public String getActor(String reqActorId) {
     	String query;
-        query = "MATCH (a) WHERE a.actorId = \"%s\" RETURN a.actorId, a.name, a.movies;"; // TODO: the query should gather movies for an actor
+    	query = "MATCH (a {actorId:\"%s\"})-[ai:ACTED_IN]->(m) RETURN a.actorId, a.name, collect(m.name);";
         query = String.format(query, reqActorId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();
@@ -46,8 +46,26 @@ public class Neo4jDAO {
     }
     public String getMovie(String reqMovieId) {
     	String query;
-        query = "MATCH (m) WHERE m.movieId = \"%s\" RETURN m.movieId, m.name, m.actors;"; // TODO: the query should gather actors for a movie
+        query = "MATCH (m {movieId:\"%s\"})<-[ai:ACTED_IN]-(a) RETURN m.movieId, m.name, collect(a.name);";
         query = String.format(query, reqMovieId);
+        Result result = this.session.run(query);
+        List<String> resultAsJsonStrings = new ArrayList<String>();
+        Record record;
+        JSONObject recordJson;
+        String recordJsonString;
+        while (result.hasNext()) {
+            record = result.next();
+            recordJson = new JSONObject(record.asMap());
+            recordJsonString = recordJson.toString();
+            resultAsJsonStrings.add(recordJsonString);
+        }    
+        return resultAsJsonStrings.get(0);
+    }
+    public String hasRelationship(String reqMovieId, String reqActorId) {
+    	// TODO:
+    	String query;
+        query = "...;"; // TODO: the query should check if the given actor acted in the given movie (node label should be r)
+        query = String.format(query, reqMovieId, reqActorId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();
         Record record;
