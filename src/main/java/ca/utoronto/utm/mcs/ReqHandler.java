@@ -3,10 +3,9 @@ import com.sun.net.httpserver.HttpHandler;
 import javax.inject.Inject;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
-import java.io.OutputStream;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.OutputStream;
 public class ReqHandler implements HttpHandler {
 	private Neo4jDAO neodao;
 	@Inject
@@ -22,22 +21,22 @@ public class ReqHandler implements HttpHandler {
     	try {
     		String uri = exchange.getRequestURI().toString();
             String[] uriParts = uri.split("/");
-            if (uriParts.length() == 3 && uriParts[0] == "api" && uriParts[1] == "v1") {
+            if (uriParts.length == 4 && uriParts[0].equals("") && uriParts[1].equals("api") && uriParts[2].equals("v1")) {
 	            switch (exchange.getRequestMethod()) {
 	                case "GET":
-                    	if (uriParts[2] == "getActor") {
+                    	if (uriParts[3].equals("getActor")) {
                     		this.getActor(exchange);
                     		return;
-                    	} else if (uriParts[2] == "getMovie") {
+                    	} else if (uriParts[3].equals("getMovie")) {
                     		this.getMovie(exchange);
                     		return;
-                    	} else if (uriParts[2] == "hasRelationship") {
+                    	} else if (uriParts[3].equals("hasRelationship")) {
                     		this.hasRelationship(exchange);
                     		return;
-                    	} else if (uriParts[2] == "computeBaconNumber") {
+                    	} else if (uriParts[3].equals("computeBaconNumber")) {
                     		this.computeBaconNumber(exchange);
                     		return;
-                    	} else if (uriParts[2] == "computeBaconPath") {
+                    	} else if (uriParts[3].equals("computeBaconPath")) {
                     		this.computeBaconPath(exchange);
                     		return;
                     	}
@@ -55,29 +54,6 @@ public class ReqHandler implements HttpHandler {
         	exchange.sendResponseHeaders(500, -1);
             e.printStackTrace();
         }
-    }
-    /** Add Movie
-     * This endpoint is to add a movie node into the database
-     * @param movieId
-     * @param name
-     * @return  - 200 OK - For a successful add
-                - 400 BAD REQUEST - If the request body is improperly formatted or 
-                  missing required information
-                - 500 INTERNAL SERVER ERROR - If save or add was unsuccessful 
-                  (Java Exception Thrown)
-     */
-    public int addMovie(String movieId, String name){
-        // try () {
-            // if ()
-                // return 400 on fail
-            // else (pass)
-                // return 200 on pass
-        // }
-        // catch(Exception e){
-            // catch error
-                // return 500 on INTERNAL SERVER ERROR
-        // }
-        return 1;
     }
     /**
  	GET /api/v1/getActor
@@ -102,40 +78,42 @@ public class ReqHandler implements HttpHandler {
             }
     		// check for 200, 404:
     		try {
+    			
+    			System.out.printf("reqActorId: %s\n", reqActorId);
+    			if (reqActorId.equals("101")) {
+    				System.out.printf("YO!\n");
+    			}
+    			
     			String queryResult = this.neodao.getActor(reqActorId); // the query return stringified json obj
-    			// TODO: parse query's result:
     			
+    			System.out.printf("HERE2");
     			
+    			JSONObject deserResBody = new JSONObject(queryResult);
     			
-    			JSONObject deserResBody = new JSONObject(resBody);
+    			System.out.printf("HERE3");
+    			
         		String resActorId, resName, resMoviesStr;
-        		JSONArray resMovies;
-        		if (deserResBody.length() == 3 && deserReqBody.has("actorId") && deserReqBody.has("name") && deserReqBody.has("movies")) {
+        		//String[] resMovies;
+        		if (deserResBody.length() == 3 && deserResBody.has("actorId") && deserResBody.has("name") && deserResBody.has("movies")) {
         			resActorId = deserResBody.getString("actorId");
         			resName = deserResBody.getString("name");
         			resMoviesStr = deserResBody.getString("movies");
-        			JSONArray resMovies = new JSONArray(resMoviesStr);
-        			
-        			/*
-                    String pokemon_name = this.dao.getPokemon(pid);
-                    r.sendResponseHeaders(200, pokemon_name.length());
-                    OutputStream os = r.getResponseBody();
-                    os.write(pokemon_name.getBytes());
+                    exchange.sendResponseHeaders(200, resMoviesStr.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(resMoviesStr.getBytes());
                     os.close();
-                    */
-        			
-        			
-        			
         		} else {
                     exchange.sendResponseHeaders(404, -1); // -1 indicates this response has no body
                     return;
                 }
             } catch (Exception e) {
                 exchange.sendResponseHeaders(500, -1);
+                
+                System.out.printf("HERE1");
+                
                 e.printStackTrace();
                 return;
             }
-            exchange.sendResponseHeaders(200, -1);
         } catch (Exception e) {
         	exchange.sendResponseHeaders(500, -1);
             e.printStackTrace();

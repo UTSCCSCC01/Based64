@@ -21,7 +21,7 @@ public class ServerModule {
 	*/
 	@Provides
 	public HttpServer provideServer() {
-		final int port = 8080;
+		final int port = 8081;
 		final String hostname = "0.0.0.0";
 		final int backlog = 0;
 		final String contextPath = "/api";
