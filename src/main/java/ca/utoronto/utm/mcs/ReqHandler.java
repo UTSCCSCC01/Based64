@@ -79,7 +79,7 @@ public class ReqHandler implements HttpHandler {
             }
     		// check for 200, 404:
     		try {
-    			String queryResult = this.neodao.getActor(reqActorId); // the query return stringified json obj
+    			String queryResult = this.neodao.getActor(reqActorId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resMoviesStr;
         		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("a.movies")) {
@@ -89,7 +89,7 @@ public class ReqHandler implements HttpHandler {
                     os.write(resMoviesStr.getBytes());
                     os.close();
         		} else {
-                    exchange.sendResponseHeaders(500, -1); // -1 indicates this response has no body
+                    exchange.sendResponseHeaders(500, -1);
                     return;
                 }
             } catch (Exception e) {
@@ -109,9 +109,43 @@ public class ReqHandler implements HttpHandler {
 	@return 200 OK (success), 400 BAD REQUEST (req body is improperly formatted OR missing req info), 404 NOT FOUND (when the movie DNE for the req), 500 INTERNAL SERVER ERROR [failure (i.e. Java exception thrown)]
 	Check if a movie exists in the db.
 	Edge case: return an empty list of actors for the response if the movie exists but no one acted in it (ex. {"movieId": "nm1001234", "name": "Chappie", "actors": []})
+	Try: `curl -v -X GET -d '{"movieId": "aba"}' http://localhost:8081/api/v1/getMovie`
     */
     public void getMovie(HttpExchange exchange) throws IOException, JSONException {
-    	// TODO
+    	try {
+    		// check for 400:
+    		String reqBody = Utils.convert(exchange.getRequestBody());
+    		JSONObject deserReqBody = new JSONObject(reqBody);
+    		String reqMovieId;
+    		if (deserReqBody.length() == 1 && deserReqBody.has("movieId")) {
+    			reqMovieId = deserReqBody.getString("movieId");
+    		} else {
+                exchange.sendResponseHeaders(400, -1); // -1 indicates this response has no body
+                return;
+            }
+    		// check for 200, 404:
+    		try {
+    			String queryResult = this.neodao.getMovie(reqMovieId);
+    			JSONObject deserResBody = new JSONObject(queryResult);
+        		String resActorsStr;
+        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("m.actors")) {
+        			resActorsStr = deserResBody.getString("m.actors");
+                    exchange.sendResponseHeaders(200, resActorsStr.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(resActorsStr.getBytes());
+                    os.close();
+        		} else {
+                    exchange.sendResponseHeaders(500, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                exchange.sendResponseHeaders(404, -1);
+                return;
+            }
+        } catch (Exception e) {
+        	exchange.sendResponseHeaders(500, -1);
+            return;
+        }
     }
     /**
 	GET /api/v1/hasRelationship

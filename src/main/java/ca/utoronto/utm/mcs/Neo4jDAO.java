@@ -29,7 +29,7 @@ public class Neo4jDAO {
     // TODO (CRUD operations, where the following function is an example of the format):
     public String getActor(String reqActorId) {
     	String query;
-        query = "MATCH (a) WHERE a.actorId = \"%s\" RETURN a.actorId, a.name, a.movies;";
+        query = "MATCH (a) WHERE a.actorId = \"%s\" RETURN a.actorId, a.name, a.movies;"; // TODO: the query should gather movies for an actor
         query = String.format(query, reqActorId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();
@@ -42,6 +42,23 @@ public class Neo4jDAO {
             recordJsonString = recordJson.toString();
             resultAsJsonStrings.add(recordJsonString);
         }
+        return resultAsJsonStrings.get(0);
+    }
+    public String getMovie(String reqMovieId) {
+    	String query;
+        query = "MATCH (m) WHERE m.movieId = \"%s\" RETURN m.movieId, m.name, m.actors;"; // TODO: the query should gather actors for a movie
+        query = String.format(query, reqMovieId);
+        Result result = this.session.run(query);
+        List<String> resultAsJsonStrings = new ArrayList<String>();
+        Record record;
+        JSONObject recordJson;
+        String recordJsonString;
+        while (result.hasNext()) {
+            record = result.next();
+            recordJson = new JSONObject(record.asMap());
+            recordJsonString = recordJson.toString();
+            resultAsJsonStrings.add(recordJsonString);
+        }    
         return resultAsJsonStrings.get(0);
     }
     
