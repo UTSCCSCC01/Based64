@@ -92,12 +92,13 @@ public class Neo4jDAO {
                 - 500 INTERNAL SERVER ERROR - If save or add was unsuccessful 
                   (Java Exception Thrown)
      */
+    // TODO relationship already exists return 400
     public int addRelationship(String actorId, String movieId){
 
         try (Session session = this.driver.session()){
             try(Transaction tx = session.beginTransaction()){
-                if (checkDatabase(actorId, 0 ) == 1 || checkDatabase(movieId, 1 ) == 1){
-                    return 400;
+                if (checkDatabase(actorId, 0 ) == 0 || checkDatabase(movieId, 1 ) == 0){
+                    return 404;
                 }
                 String query = "MATCH (a: Actor), (m: Movie) WHERE a.id = %s AND m.id = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
                 tx.run(query);
@@ -131,9 +132,10 @@ public class Neo4jDAO {
                 }
                 boolean x = tx.run(query).hasNext();
                 tx.commit();
+
                 if (x)
-                    return 0;
-                return 1;
+                    return 0;   // if exists
+                return 1;       // if DNE
                 
             }
             catch(Exception e1){
