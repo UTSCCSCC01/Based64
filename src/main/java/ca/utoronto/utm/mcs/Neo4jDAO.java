@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import org.json.JSONObject;
 import org.neo4j.driver.util.Pair;
-
 import org.neo4j.driver.*;
-
 // NOTE: all your db transactions or queries should go in this class
 public class Neo4jDAO {
 	/*
@@ -31,20 +29,20 @@ public class Neo4jDAO {
     // TODO (CRUD operations, where the following function is an example of the format):
     public String getActor(String reqActorId) {
     	String query;
-        query = "MATCH (a:Actor) WHERE a.actorId = \"%s\" RETURN a;";
+        query = "MATCH (a) WHERE a.actorId = \"%s\" RETURN a.actorId, a.name, a.movies;";
         query = String.format(query, reqActorId);
         Result result = this.session.run(query);
-        Record record = result.single();
-        
-        
-        
-        String t = record.get(0).toString();
-        System.out.printf("t:\n");
-        System.out.printf(t);
-        
-        
-        
-        return t;
+        List<String> resultAsJsonStrings = new ArrayList<String>();
+        Record record;
+        JSONObject recordJson;
+        String recordJsonString;
+        while (result.hasNext()) {
+            record = result.next();
+            recordJson = new JSONObject(record.asMap());
+            recordJsonString = recordJson.toString();
+            resultAsJsonStrings.add(recordJsonString);
+        }
+        return resultAsJsonStrings.get(0);
     }
     
     

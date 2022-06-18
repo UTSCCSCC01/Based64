@@ -63,6 +63,7 @@ public class ReqHandler implements HttpHandler {
 	@return 200 OK (success), 400 BAD REQUEST (req body is improperly formatted OR missing req info), 404 NOT FOUND (when the actor DNE for the req), 500 INTERNAL SERVER ERROR [failure (i.e. Java exception thrown)]
 	Check if an actor exists in the db.
 	Edge case: return an empty list of movies for the response if the actor exists but didn't act in any movies (ex. {"actorId": "nm1001234", "name": "Sharlto Copley", "movies": []})
+	Try: `curl -v -X GET -d '{"actorId": "101"}' http://localhost:8081/api/v1/getActor`
     */
     public void getActor(HttpExchange exchange) throws IOException, JSONException {
     	try {
@@ -78,45 +79,25 @@ public class ReqHandler implements HttpHandler {
             }
     		// check for 200, 404:
     		try {
-    			
-    			System.out.printf("reqActorId: %s\n", reqActorId);
-    			if (reqActorId.equals("101")) {
-    				System.out.printf("YO!\n");
-    			}
-    			
     			String queryResult = this.neodao.getActor(reqActorId); // the query return stringified json obj
-    			
-    			System.out.printf("HERE2");
-    			
     			JSONObject deserResBody = new JSONObject(queryResult);
-    			
-    			System.out.printf("HERE3");
-    			
-        		String resActorId, resName, resMoviesStr;
-        		//String[] resMovies;
-        		if (deserResBody.length() == 3 && deserResBody.has("actorId") && deserResBody.has("name") && deserResBody.has("movies")) {
-        			resActorId = deserResBody.getString("actorId");
-        			resName = deserResBody.getString("name");
-        			resMoviesStr = deserResBody.getString("movies");
+        		String resMoviesStr;
+        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("a.movies")) {
+        			resMoviesStr = deserResBody.getString("a.movies");
                     exchange.sendResponseHeaders(200, resMoviesStr.length());
                     OutputStream os = exchange.getResponseBody();
                     os.write(resMoviesStr.getBytes());
                     os.close();
         		} else {
-                    exchange.sendResponseHeaders(404, -1); // -1 indicates this response has no body
+                    exchange.sendResponseHeaders(500, -1); // -1 indicates this response has no body
                     return;
                 }
             } catch (Exception e) {
-                exchange.sendResponseHeaders(500, -1);
-                
-                System.out.printf("HERE1");
-                
-                e.printStackTrace();
+                exchange.sendResponseHeaders(404, -1);
                 return;
             }
         } catch (Exception e) {
         	exchange.sendResponseHeaders(500, -1);
-            e.printStackTrace();
             return;
         }
     }
