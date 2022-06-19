@@ -1,4 +1,8 @@
 /target/
 /bin/
+<<<<<<< HEAD
 .apt_generated/ca/utoronto/utm/mcs/ReqHandlerModule_ProvideNeo4jDAOFactory.java
 .apt_generated/ca/utoronto/utm/mcs/*.java
+=======
+/.apt_generated_tests/
+>>>>>>> getRequestBranch
