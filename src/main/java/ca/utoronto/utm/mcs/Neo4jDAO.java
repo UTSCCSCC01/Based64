@@ -43,7 +43,7 @@ public class Neo4jDAO {
 
         try (Session session = this.driver.session()) {
             try(Transaction tx = session.beginTransaction()){
-                if (checkDatabase(movieId, 1 ) == 1){
+                if (checkDatabase(movieId, 1 ) == 0){
                     return 400;
                 }
                 String query = "CREATE (m: Movie {name: '%s', id:'%s'})".formatted(name, movieId);
@@ -75,7 +75,7 @@ public class Neo4jDAO {
 	
 	    try (Session session = this.driver.session()) {
 	        try(Transaction tx = session.beginTransaction()){
-	            if (checkDatabase(actorId, 0 ) == 1){
+	            if (checkDatabase(actorId, 0 ) == 0){
 	                return 400;
 	            }
 	            String query = "CREATE (m: Actor {name: '%s', id:'%s'})".formatted(name, actorId);
@@ -112,11 +112,14 @@ public class Neo4jDAO {
 	
 	    try (Session session = this.driver.session()){
 	        try(Transaction tx = session.beginTransaction()){
-	            if (checkDatabase(actorId, 0 ) == 0 || checkDatabase(movieId, 1 ) == 0){
+	            if (checkDatabase(actorId, 0 ) == 1 || checkDatabase(movieId, 1 ) == 1){
 	                return 404;
 	            }
-	            String query = "MATCH (a: Actor), (m: Movie) WHERE a.id = %s AND m.id = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
-	            tx.run(query);
+//                if (hasRelationship(movieId, actorId)){
+//
+//                }
+	            String query = "MATCH (a: Actor), (m: Movie) WHERE a.id = '%s' AND m.id = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
+                tx.run(query);
 	            tx.commit();
 	            return 200;
 	            
@@ -143,7 +146,7 @@ public class Neo4jDAO {
 	            if (actorOrMovie == 0){
 	                query = "MATCH (a: Actor) WHERE a.id = '%s' RETURN a".formatted(id);
 	            }else{
-	                query = "MATCH (m: Movie) WHERE m.id = '%s' RETURN a".formatted(id);
+	                query = "MATCH (m: Movie) WHERE m.id = '%s' RETURN m".formatted(id);
 	            }
 	            boolean x = tx.run(query).hasNext();
 	            tx.commit();

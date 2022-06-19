@@ -40,7 +40,7 @@ public class ReqHandler implements HttpHandler {
                     		this.computeBaconPath(exchange);
                     		return;
                     	}
-	                case "put":
+	                case "PUT":
                     	if (uriParts[3].equals("addActor")) {
                     		this.addActor(exchange);
                     		return;
@@ -76,7 +76,7 @@ public class ReqHandler implements HttpHandler {
                         exchange.sendResponseHeaders(400, -1);
                     }else{
                         name = deserialized.getString("name");
-                        actorId = deserialized.getString("name");
+                        actorId = deserialized.getString("actorId");
                         int rcode = neodao.addActor(name, actorId);
                         exchange.sendResponseHeaders(rcode, -1);
                     }
@@ -92,7 +92,7 @@ public class ReqHandler implements HttpHandler {
                     JSONObject deserialized = new JSONObject(body);
                     String name, movieId;
 
-                    if(!deserialized.has("name") || !deserialized.has("movieID") ){
+                    if(!deserialized.has("name") || !deserialized.has("movieId") ){
                         exchange.sendResponseHeaders(400, -1);
                     }else{
                         name = deserialized.getString("name");
@@ -112,7 +112,7 @@ public class ReqHandler implements HttpHandler {
                     JSONObject deserialized = new JSONObject(body);
                     String actorId, movieId;
 
-                    if(!deserialized.has("actorId") || !deserialized.has("movieID") ){
+                    if(!deserialized.has("actorId") || !deserialized.has("movieId") ){
                         exchange.sendResponseHeaders(400, -1);
                     }else{
                         actorId = deserialized.getString("actorId");
@@ -313,7 +313,7 @@ public class ReqHandler implements HttpHandler {
     		// check for 200, 404:
     		try {
     			String queryResult = this.neodao.hasRelationship(reqMovieId, reqActorId);
-    			JSONObject deserResBody = new JSONObject(queryResult);
+				JSONObject deserResBody = new JSONObject(queryResult);
         		String resHasRelationshipStr;
         		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("a.actorId") && deserResBody.has("EXISTS((m)<-[:ACTED_IN]-(a))")) {
         			resHasRelationshipStr = deserResBody.getString("EXISTS((m)<-[:ACTED_IN]-(a))");
