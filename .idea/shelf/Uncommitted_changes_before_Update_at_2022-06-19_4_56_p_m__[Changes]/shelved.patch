@@ -1,0 +1,86 @@
+Index: src/test/java/ca/utoronto/utm/mcs/AppTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ca.utoronto.utm.mcs;\r\n\r\nimport static org.junit.jupiter.api.Assertions.assertTrue;\r\nimport org.junit.jupiter.api.Test;\r\n\r\n// TODO Please Write Your Tests For CI/CD In This Class. You will see\r\n    // these tests pass/fail on github under github actions.    \r\npublic class AppTest {\r\n\r\n    //Add\r\n    //--------------------------------\r\n    @Test\r\n    public void addActorPass() { //200\r\n        assertTrue(true);\r\n    }\r\n    @Test\r\n    public void addActorFail() { //400\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    @Test\r\n    public void addMoviePass() { //200\r\n        assertTrue(true);\r\n    }    \r\n    @Test\r\n    public void addMovieFail() { //400\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    @Test\r\n    public void addRelationshipPass() { //200\r\n        assertTrue(true);\r\n    }\r\n    @Test\r\n    public void addRelationshipFail() { //400,404\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    \r\n    // Get\r\n    //--------------------------------\r\n    @Test\r\n    public void getActorPass() { //200\r\n        assertTrue(true);\r\n    }    \r\n    @Test\r\n    public void getActorFail() { //400,404\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    @Test\r\n    public void getMoviePass() { //200\r\n        assertTrue(true);\r\n    }    \r\n    @Test\r\n    public void getMovieFail() { //400,404\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    \r\n    // Has\r\n    //--------------------------------\r\n    @Test\r\n    public void hasRelationshipPass() { //200\r\n        assertTrue(true);\r\n    }    \r\n    @Test\r\n    public void hasRelationshipFail() { //400,404\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    \r\n    // Compute\r\n    //--------------------------------\r\n    @Test\r\n    public void computeBaconNumberPass() { //200\r\n        assertTrue(true);\r\n    }    \r\n    @Test\r\n    public void computeBaconNumberFail() { //400,404\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n    @Test\r\n    public void computeBaconPathPass() { //200\r\n        assertTrue(true);\r\n    }    \r\n    @Test\r\n    public void computeBaconPathFail() { //400,404\r\n        assertTrue(true);\r\n    }\r\n    //--------------------------------\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/ca/utoronto/utm/mcs/AppTest.java b/src/test/java/ca/utoronto/utm/mcs/AppTest.java
+--- a/src/test/java/ca/utoronto/utm/mcs/AppTest.java	(revision a9395e43c083c6aaa990c32bec165e1525255896)
++++ b/src/test/java/ca/utoronto/utm/mcs/AppTest.java	(date 1655672136888)
+@@ -1,17 +1,73 @@
+ package ca.utoronto.utm.mcs;
+ 
++import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
++
++import org.json.JSONException;
++import org.json.JSONObject;
++import org.junit.jupiter.api.BeforeAll;
++import org.junit.jupiter.api.Order;
+ import org.junit.jupiter.api.Test;
+ 
++import java.io.IOException;
++import java.io.OutputStream;
++import java.io.OutputStreamWriter;
++import java.net.HttpURLConnection;
++import java.net.URI;
++import java.net.URL;
++import java.net.http.HttpClient;
++import java.net.http.HttpRequest;
++import java.net.http.HttpResponse;
++import java.nio.charset.StandardCharsets;
++
+ // TODO Please Write Your Tests For CI/CD In This Class. You will see
+     // these tests pass/fail on github under github actions.    
+ public class AppTest {
+ 
++    @BeforeAll
++    private static void setServer(){
++        // TODO
++    }
++
++    final static String API_URL = "http://localhost:8080";
++    final static String Path = "/api/v1";
++    private static HttpResponse<String> sendRequest(String endpoint, String method, String reqBody) throws IOException, InterruptedException {
++        HttpClient client = HttpClient.newHttpClient();
++        HttpRequest request = HttpRequest.newBuilder()
++                .uri(URI.create(API_URL + Path + "/"+ endpoint))
++//                .version(HttpClient.Version.HTTP_1_1)
++                .method(method, HttpRequest.BodyPublishers.ofString(reqBody))
++                .build();
++        return client.send(request, HttpResponse.BodyHandlers.ofString());
++    }
+     //Add
+     //--------------------------------
+     @Test
+-    public void addActorPass() { //200
+-        assertTrue(true);
++    @Order(1)
++    public void addActorPass() throws JSONException, IOException, InterruptedException { //200
++//        URL url = new URL(API_URL+"/api/v1/addActor");
++        JSONObject rq = new JSONObject();
++        rq.put("name", "Jack");
++        rq.put("actorId", "20");
++        HttpResponse<String> confirmRes = sendRequest("addActor", "PUT", rq.toString());
++        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
++//        assertEquals("2\n", confirmRes.body());
++//        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
++//        httpURLConnection.setDoOutput(true);
++//        httpURLConnection.setRequestMethod("PUT");
++//        httpURLConnection.setRequestProperty("Content-Type", "application/json");
++//        OutputStream os = httpURLConnection.getOutputStream();
++//        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(os, StandardCharsets.UTF_8);
++//        outputStreamWriter.write(rq.toString());
++//        outputStreamWriter.close();
++//        os.close();
++//        OutputStreamWriter out = new OutputStreamWriter(
++//                httpURLConnection.getOutputStream());
++//        out.write("Resource content");
++//        out.close();
++//        httpURLConnection.getInputStream();
++//        httpURLConnection.connect();
++//        assertEquals(200, httpURLConnection.getResponseCode());
+     }
+     @Test
+     public void addActorFail() { //400

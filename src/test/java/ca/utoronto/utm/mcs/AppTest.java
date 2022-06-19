@@ -27,9 +27,12 @@ public class AppTest {
     @BeforeAll
     private static void setServer(){
         // TODO
+        ServerComponent component = DaggerServerComponent.create();
+        Server s = component.buildServer();
+        s.setupServer();
     }
 
-    final static String API_URL = "http://localhost:8080";
+    final static String API_URL = "http://localhost:8081";
     final static String Path = "/api/v1";
     private static HttpResponse<String> sendRequest(String endpoint, String method, String reqBody) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
@@ -45,10 +48,9 @@ public class AppTest {
     @Test
     @Order(1)
     public void addActorPass() throws JSONException, IOException, InterruptedException { //200
-//        URL url = new URL(API_URL+"/api/v1/addActor");
         JSONObject rq = new JSONObject();
         rq.put("name", "Jack");
-        rq.put("actorId", "20");
+        rq.put("actorId", "21");
         HttpResponse<String> confirmRes = sendRequest("addActor", "PUT", rq.toString());
         assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
 //        assertEquals("2\n", confirmRes.body());
@@ -70,17 +72,32 @@ public class AppTest {
 //        assertEquals(200, httpURLConnection.getResponseCode());
     }
     @Test
-    public void addActorFail() { //400
-        assertTrue(true);
+    @Order(2)
+    public void addActorFail() throws JSONException, IOException, InterruptedException { //400
+        JSONObject rq = new JSONObject();
+        rq.put("name", "Johnny Depp");
+        rq.put("actorId", "1");
+        HttpResponse<String> confirmRes = sendRequest("addActor", "PUT", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
     }
     //--------------------------------
     @Test
-    public void addMoviePass() { //200
-        assertTrue(true);
+    @Order(3)
+    public void addMoviePass() throws JSONException, IOException, InterruptedException { //200
+        JSONObject rq = new JSONObject();
+        rq.put("name", "New Movie");
+        rq.put("movieId", "32");
+        HttpResponse<String> confirmRes = sendRequest("addMovie", "PUT", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
     }    
     @Test
-    public void addMovieFail() { //400
-        assertTrue(true);
+    @Order(4)
+    public void addMovieFail() throws JSONException, IOException, InterruptedException { //400
+        JSONObject rq = new JSONObject();
+        rq.put("name", "Pirates");
+        rq.put("movieId", "2");
+        HttpResponse<String> confirmRes = sendRequest("addMovie", "PUT", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
     }
     //--------------------------------
     @Test

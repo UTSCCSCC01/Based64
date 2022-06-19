@@ -46,7 +46,7 @@ public class Neo4jDAO {
                 if (checkDatabase(movieId, 1 ) == 0){
                     return 400;
                 }
-                String query = "CREATE (m: Movie {name: '%s', id:'%s'})".formatted(name, movieId);
+                String query = "CREATE (m: Movie {name: '%s', movieId:'%s'})".formatted(name, movieId);
                 tx.run(query);
                 tx.commit();
                 return 200;
@@ -78,7 +78,7 @@ public class Neo4jDAO {
 	            if (checkDatabase(actorId, 0 ) == 0){
 	                return 400;
 	            }
-	            String query = "CREATE (m: Actor {name: '%s', id:'%s'})".formatted(name, actorId);
+	            String query = "CREATE (m: Actor {name: '%s', actorId:'%s'})".formatted(name, actorId);
 	            tx.run(query);
 	            tx.commit();
 	            return 200;
@@ -118,7 +118,7 @@ public class Neo4jDAO {
 //                if (hasRelationship(movieId, actorId)){
 //
 //                }
-	            String query = "MATCH (a: Actor), (m: Movie) WHERE a.id = '%s' AND m.id = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
+	            String query = "MATCH (a: Actor), (m: Movie) WHERE a.actorId = '%s' AND m.movieId = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
                 tx.run(query);
 	            tx.commit();
 	            return 200;
@@ -144,9 +144,9 @@ public class Neo4jDAO {
 	        try(Transaction tx = session.beginTransaction()){
 	            String query;
 	            if (actorOrMovie == 0){
-	                query = "MATCH (a: Actor) WHERE a.id = '%s' RETURN a".formatted(id);
+	                query = "MATCH (a: Actor) WHERE a.actorId = '%s' RETURN a".formatted(id);
 	            }else{
-	                query = "MATCH (m: Movie) WHERE m.id = '%s' RETURN m".formatted(id);
+	                query = "MATCH (m: Movie) WHERE m.movieId = '%s' RETURN m".formatted(id);
 	            }
 	            boolean x = tx.run(query).hasNext();
 	            tx.commit();
