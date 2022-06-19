@@ -18,9 +18,11 @@ import org.json.JSONException;
 // NOTE: all your db transactions or queries should go in this class
 public class Neo4jDAO {
     private final Driver driver;
-    // Constructor
-    public Neo4jDAO(String uriDb, String username, String password) {
-        this.driver = GraphDatabase.driver(uriDb, AuthTokens.basic(username, password));   
+	private final Session session;
+    @Inject
+    public Neo4jDAO(Driver driver) {
+        this.driver = driver;
+        this.session = this.driver.session();
     }
 
     // _______________________________________________
