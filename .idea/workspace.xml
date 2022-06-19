@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ed1baed-ccab-4f8d-89c6-c7438a0ca1ac" name="Changes" comment="Adding Testcases">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/Neo4jDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/Neo4jDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/Neo4jDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/Neo4jDAO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ReqHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ReqHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/ca/utoronto/utm/mcs/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/ca/utoronto/utm/mcs/AppTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ServerModule.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ServerModule.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

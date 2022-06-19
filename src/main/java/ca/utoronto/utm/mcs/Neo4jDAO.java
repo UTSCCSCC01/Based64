@@ -1,20 +1,13 @@
 package ca.utoronto.utm.mcs;
 import javax.inject.Inject;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.types.Node;
 
 import java.util.List;
-import java.util.Map;
-import java.io.OutputStream;
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.json.JSONObject;
-import org.neo4j.driver.util.Pair;
 import org.neo4j.driver.*;
-import java.io.IOException;
-import org.json.JSONException;
+
 // NOTE: all your db transactions or queries should go in this class
 public class Neo4jDAO {
     private final Driver driver;
@@ -115,9 +108,9 @@ public class Neo4jDAO {
 	            if (checkDatabase(actorId, 0 ) == 1 || checkDatabase(movieId, 1 ) == 1){
 	                return 404;
 	            }
-//                if (hasRelationship(movieId, actorId)){
-//
-//                }
+                if (checkRelation(movieId, actorId)){
+                    return 400;
+                }
 	            String query = "MATCH (a: Actor), (m: Movie) WHERE a.actorId = '%s' AND m.movieId = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
                 tx.run(query);
 	            tx.commit();
@@ -134,7 +127,8 @@ public class Neo4jDAO {
 	    }
 	
 	}
-	// ________________________________________________ 
+
+    // ________________________________________________
 	// Put Helper functions
 	// ________________________________________________ 
 	private int checkDatabase(String id, int actorOrMovie ){
@@ -168,7 +162,23 @@ public class Neo4jDAO {
 	    }
 	
 	}
-    
+    private Boolean checkRelation(String movieId, String actorId) {
+        try(Session session = driver.session()){
+            try(Transaction tx = session.beginTransaction()){
+                String query = "RETURN EXISTS((:Actor{actorId:'%s'})-[:ACTED_IN]-(:Movie{movieId:'%s'}))".formatted(actorId, movieId);
+                Result result = tx.run(query);
+                Value val1 = result.next().values().get(0);
+                Boolean val = val1.asBoolean();
+                tx.commit();
+                return val;
+            }
+            catch(Exception e1){
+                e1.printStackTrace();
+                return false;
+            }
+        }
+    }
+
     // TODO (CRUD operations, where the following function is an example of the format):
     public String getActor(String reqActorId) {
     	String query;
