@@ -5,9 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.neo4j.driver.Record;
 import org.json.JSONArray;
 import java.io.OutputStream;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 public class ReqHandler implements HttpHandler {
 	private Neo4jDAO neodao;
     @Inject
@@ -221,12 +223,26 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.getActor(reqActorId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resMoviesStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("collect(m.name)")) {
-        			resMoviesStr = deserResBody.getString("collect(m.name)");
-                    exchange.sendResponseHeaders(200, resMoviesStr.length());
+        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("collect(m.movieId)")) {
+        			
+        			JSONObject resBody = new JSONObject();
+        			resBody.put("actorId", deserResBody.getString("a.actorId"));
+        			resBody.put("name", deserResBody.getString("a.name"));
+        			String s = deserResBody.getString("collect(m.movieId)");
+        			String[] ss = s.split("\"");
+        			List<String> sss = new ArrayList<String>();
+        			for (int i = 0; i < ss.length; i++) {
+        				if ((i % 2) == 1) {
+        					sss.add(ss[i]);
+        	        	}
+        			}
+        			resBody.put("movies", sss);
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(resMoviesStr.getBytes());
+                    os.write(res);
                     os.close();
+                    
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -267,12 +283,26 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.getMovie(reqMovieId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resActorsStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("collect(a.name)")) {
-        			resActorsStr = deserResBody.getString("collect(a.name)");
-                    exchange.sendResponseHeaders(200, resActorsStr.length());
+        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("collect(a.actorId)")) {
+                    
+                    JSONObject resBody = new JSONObject();
+        			resBody.put("movieId", deserResBody.getString("m.movieId"));
+        			resBody.put("name", deserResBody.getString("m.name"));
+        			String s = deserResBody.getString("collect(a.actorId)");
+        			String[] ss = s.split("\"");
+        			List<String> sss = new ArrayList<String>();
+        			for (int i = 0; i < ss.length; i++) {
+        				if ((i % 2) == 1) {
+        					sss.add(ss[i]);
+        	        	}
+        			}
+        			resBody.put("actors", sss);
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(resActorsStr.getBytes());
+                    os.write(res);
                     os.close();
+                    
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -316,11 +346,18 @@ public class ReqHandler implements HttpHandler {
 				JSONObject deserResBody = new JSONObject(queryResult);
         		String resHasRelationshipStr;
         		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("a.actorId") && deserResBody.has("EXISTS((m)<-[:ACTED_IN]-(a))")) {
+
+                    JSONObject resBody = new JSONObject();
+        			resBody.put("movieId", deserResBody.getString("m.movieId"));
+        			resBody.put("actorId", deserResBody.getString("a.actorId"));
         			resHasRelationshipStr = deserResBody.getString("EXISTS((m)<-[:ACTED_IN]-(a))");
-                    exchange.sendResponseHeaders(200, resHasRelationshipStr.length());
+        			resBody.put("hasRelationship", Boolean.parseBoolean(resHasRelationshipStr));
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(resHasRelationshipStr.getBytes());
+                    os.write(res);
                     os.close();
+                    
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -362,11 +399,16 @@ public class ReqHandler implements HttpHandler {
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String baconNumberStr;
         		if (deserResBody.length() == 1 && deserResBody.has("length(p)/2")) {
+
+        			JSONObject resBody = new JSONObject();
         			baconNumberStr = deserResBody.getString("length(p)/2");
-                    exchange.sendResponseHeaders(200, baconNumberStr.length());
+        			resBody.put("baconNumber", Integer.parseInt(baconNumberStr));
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(baconNumberStr.getBytes());
+                    os.write(res);
                     os.close();
+
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -391,6 +433,8 @@ public class ReqHandler implements HttpHandler {
 	1) for an actor that's acted in a movie but doesn't have a path to Kevin Bacon, a 404 NOT FOUND should be returned
 	2) for an actor with multiple baconPaths with the same baconNumbers, just return 1 of the baconPaths
 	3) Kevin Bacon's baconPath should be a list with just his actorId in it
+	Try: `curl -v -X GET -d '{"actorId": "0"}' http://localhost:8081/api/v1/computeBaconPath`
+	Try: `curl -v -X GET -d '{"actorId": "1"}' http://localhost:8081/api/v1/computeBaconPath`
     */
 	public void computeBaconPath(HttpExchange exchange) throws IOException, JSONException {
 		try {
@@ -407,14 +451,19 @@ public class ReqHandler implements HttpHandler {
     		// check for 200, 404:
     		try {
     			List<String> queryResult = this.neodao.computeBaconPath(reqActorId);
-    			String queryResultStr = queryResult.toString();
-    			JSONArray r = new JSONArray(queryResult);
-    			JSONObject o = new JSONObject();
-    			o.put("baconPath", r);
-                exchange.sendResponseHeaders(200, queryResultStr.length());
+    			
+    			String[] queryResult2 = new String[queryResult.size()];
+    			for (int i = 0; i < queryResult.size(); i++) {
+    				queryResult2[i] = queryResult.get(i).replaceAll("^\"|\"$", "");
+    	        }
+    			JSONObject resBody = new JSONObject();
+    			resBody.put("baconPath", queryResult2);
+                byte[] res = resBody.toString().getBytes();
+                exchange.sendResponseHeaders(200, res.length);
                 OutputStream os = exchange.getResponseBody();
-                os.write(queryResultStr.getBytes());
+                os.write(res);
                 os.close();
+                
             } catch (Exception e) {
                 exchange.sendResponseHeaders(404, -1);
                 return;

@@ -172,7 +172,7 @@ public class Neo4jDAO {
     // TODO (CRUD operations, where the following function is an example of the format):
     public String getActor(String reqActorId) {
     	String query;
-    	query = "MATCH (a {actorId:\"%s\"})-[ai:ACTED_IN]->(m) RETURN a.actorId, a.name, collect(m.name);";
+    	query = "MATCH (a {actorId:\"%s\"})-[ai:ACTED_IN]->(m) RETURN a.actorId, a.name, collect(m.movieId);";
         query = String.format(query, reqActorId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();
@@ -189,7 +189,7 @@ public class Neo4jDAO {
     }
     public String getMovie(String reqMovieId) {
     	String query;
-        query = "MATCH (m {movieId:\"%s\"})<-[ai:ACTED_IN]-(a) RETURN m.movieId, m.name, collect(a.name);";
+        query = "MATCH (m {movieId:\"%s\"})<-[ai:ACTED_IN]-(a) RETURN m.movieId, m.name, collect(a.actorId);";
         query = String.format(query, reqMovieId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();
