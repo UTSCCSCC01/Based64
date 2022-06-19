@@ -5,9 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.neo4j.driver.Record;
 import org.json.JSONArray;
 import java.io.OutputStream;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 public class ReqHandler implements HttpHandler {
 	private Neo4jDAO neodao;
     @Inject
@@ -221,12 +223,26 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.getActor(reqActorId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resMoviesStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("collect(m.name)")) {
-        			resMoviesStr = deserResBody.getString("collect(m.name)");
-                    exchange.sendResponseHeaders(200, resMoviesStr.length());
+        		if (deserResBody.length() == 3 && deserResBody.has("a.actorId") && deserResBody.has("a.name") && deserResBody.has("collect(m.movieId)")) {
+        			
+        			JSONObject resBody = new JSONObject();
+        			resBody.put("actorId", deserResBody.getString("a.actorId"));
+        			resBody.put("name", deserResBody.getString("a.name"));
+        			String s = deserResBody.getString("collect(m.movieId)");
+        			String[] ss = s.split("\"");
+        			List<String> sss = new ArrayList<String>();
+        			for (int i = 0; i < ss.length; i++) {
+        				if ((i % 2) == 1) {
+        					sss.add(ss[i]);
+        	        	}
+        			}
+        			resBody.put("movies", sss);
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(resMoviesStr.getBytes());
+                    os.write(res);
                     os.close();
+                    
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
