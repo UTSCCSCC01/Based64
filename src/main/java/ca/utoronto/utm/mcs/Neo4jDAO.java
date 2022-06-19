@@ -186,7 +186,7 @@ public class Neo4jDAO {
     }
     public String getMovie(String reqMovieId) {
     	String query;
-        query = "MATCH (m {movieId:\"%s\"})<-[ai:ACTED_IN]-(a) RETURN m.movieId, m.name, collect(a.name);";
+        query = "MATCH (m {movieId:\"%s\"})<-[ai:ACTED_IN]-(a) RETURN m.movieId, m.name, collect(a.actorId);";
         query = String.format(query, reqMovieId);
         Result result = this.session.run(query);
         List<String> resultAsJsonStrings = new ArrayList<String>();
@@ -235,7 +235,7 @@ public class Neo4jDAO {
         }    
         return resultAsJsonStrings.get(0);
     }
-    public List<String> computeBaconPath(String reqActorId) {
+    public List<Integer> computeBaconPath(String reqActorId) {
     	String query;
         query = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN nodes(p)";
         query = String.format(query, reqActorId);
@@ -249,12 +249,27 @@ public class Neo4jDAO {
         Record shortestPathRecord = resultAsRecords.get(0);
         List<Value> shortestPathValueAsListInList = shortestPathRecord.values();
         Value shortestPathValueAsList = shortestPathValueAsListInList.get(0);
-        List<String> r = new ArrayList<String>();
+        List<Integer> r = new ArrayList<Integer>();
+        
+        int v;
+        
         for (int i = 0; i < shortestPathValueAsList.size(); i++) {
         	if ((i % 2) == 0) {
-        		r.add(shortestPathValueAsList.get(i).get("actorId").toString());
+        		
+        		v = Integer.parseInt(shortestPathValueAsList.get(i).get("actorId").toString());
+        		
+        		System.out.printf("v: %d\n", v);
+        		
+        		r.add(v);
+        		
         	} else {
-        		r.add(shortestPathValueAsList.get(i).get("movieId").toString());
+        		
+        		v = Integer.parseInt(shortestPathValueAsList.get(i).get("movieId").toString());
+        		
+        		System.out.printf("v: %d\n", v);
+        		
+        		r.add(v);
+        		
         	}
         }
         return r;

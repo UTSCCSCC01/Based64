@@ -283,12 +283,26 @@ public class ReqHandler implements HttpHandler {
     			String queryResult = this.neodao.getMovie(reqMovieId);
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resActorsStr;
-        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("collect(a.name)")) {
-        			resActorsStr = deserResBody.getString("collect(a.name)");
-                    exchange.sendResponseHeaders(200, resActorsStr.length());
+        		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("m.name") && deserResBody.has("collect(a.actorId)")) {
+                    
+                    JSONObject resBody = new JSONObject();
+        			resBody.put("movieId", deserResBody.getString("m.movieId"));
+        			resBody.put("name", deserResBody.getString("m.name"));
+        			String s = deserResBody.getString("collect(a.actorId)");
+        			String[] ss = s.split("\"");
+        			List<String> sss = new ArrayList<String>();
+        			for (int i = 0; i < ss.length; i++) {
+        				if ((i % 2) == 1) {
+        					sss.add(ss[i]);
+        	        	}
+        			}
+        			resBody.put("actors", sss);
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(resActorsStr.getBytes());
+                    os.write(res);
                     os.close();
+                    
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -332,11 +346,18 @@ public class ReqHandler implements HttpHandler {
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String resHasRelationshipStr;
         		if (deserResBody.length() == 3 && deserResBody.has("m.movieId") && deserResBody.has("a.actorId") && deserResBody.has("EXISTS((m)<-[:ACTED_IN]-(a))")) {
+
+                    JSONObject resBody = new JSONObject();
+        			resBody.put("movieId", deserResBody.getString("m.movieId"));
+        			resBody.put("actorId", deserResBody.getString("a.actorId"));
         			resHasRelationshipStr = deserResBody.getString("EXISTS((m)<-[:ACTED_IN]-(a))");
-                    exchange.sendResponseHeaders(200, resHasRelationshipStr.length());
+        			resBody.put("hasRelationship", Boolean.parseBoolean(resHasRelationshipStr));
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(resHasRelationshipStr.getBytes());
+                    os.write(res);
                     os.close();
+                    
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -378,11 +399,16 @@ public class ReqHandler implements HttpHandler {
     			JSONObject deserResBody = new JSONObject(queryResult);
         		String baconNumberStr;
         		if (deserResBody.length() == 1 && deserResBody.has("length(p)/2")) {
+
+        			JSONObject resBody = new JSONObject();
         			baconNumberStr = deserResBody.getString("length(p)/2");
-                    exchange.sendResponseHeaders(200, baconNumberStr.length());
+        			resBody.put("baconNumber", Integer.parseInt(baconNumberStr));
+                    byte[] res = resBody.toString().getBytes();
+                    exchange.sendResponseHeaders(200, res.length);
                     OutputStream os = exchange.getResponseBody();
-                    os.write(baconNumberStr.getBytes());
+                    os.write(res);
                     os.close();
+
         		} else {
                     exchange.sendResponseHeaders(500, -1);
                     return;
@@ -407,6 +433,8 @@ public class ReqHandler implements HttpHandler {
 	1) for an actor that's acted in a movie but doesn't have a path to Kevin Bacon, a 404 NOT FOUND should be returned
 	2) for an actor with multiple baconPaths with the same baconNumbers, just return 1 of the baconPaths
 	3) Kevin Bacon's baconPath should be a list with just his actorId in it
+	Try: `curl -v -X GET -d '{"actorId": "0"}' http://localhost:8081/api/v1/computeBaconPath`
+	Try: `curl -v -X GET -d '{"actorId": "1"}' http://localhost:8081/api/v1/computeBaconPath`
     */
 	public void computeBaconPath(HttpExchange exchange) throws IOException, JSONException {
 		try {
@@ -422,14 +450,33 @@ public class ReqHandler implements HttpHandler {
             }
     		// check for 200, 404:
     		try {
-    			List<String> queryResult = this.neodao.computeBaconPath(reqActorId);
-    			String queryResultStr = queryResult.toString();
-    			JSONArray r = new JSONArray(queryResult);
-    			JSONObject o = new JSONObject();
-    			o.put("baconPath", r);
-                exchange.sendResponseHeaders(200, queryResultStr.length());
+    			List<Integer> queryResult = this.neodao.computeBaconPath(reqActorId);
+    			
+    			System.out.printf("queryResult: %s\n", queryResult.toString());
+    			
+    			List<String> s = new ArrayList<String>();
+//    			String v;
+//    			Integer vv;
+//    			for (int i = 0; i < queryResult.size(); i++) {
+//    				v = queryResult.get(i);
+//    				
+//    				System.out.printf("v: %s\n", v);
+//    				
+//    				vv = Integer.parseInt(v);
+//    				
+//    				System.out.printf("vv: %d\n", vv);
+//    				
+//    				s.add(vv.toString());
+//    			}
+//    			
+//    			System.out.printf("s: %s\n", s.toString());
+    			
+    			JSONObject resBody = new JSONObject();
+    			resBody.put("baconPath", s);
+                byte[] res = resBody.toString().getBytes();
+                exchange.sendResponseHeaders(200, res.length);
                 OutputStream os = exchange.getResponseBody();
-                os.write(queryResultStr.getBytes());
+                os.write(res);
                 os.close();
             } catch (Exception e) {
                 exchange.sendResponseHeaders(404, -1);
