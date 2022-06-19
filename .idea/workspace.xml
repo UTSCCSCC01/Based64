@@ -7,9 +7,10 @@
     <list default="true" id="9ed1baed-ccab-4f8d-89c6-c7438a0ca1ac" name="Changes" comment="Adding Testcases">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/Neo4jDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/Neo4jDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/Neo4jDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/Neo4jDAO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ReqHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ReqHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ServerModule.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ServerModule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/ca/utoronto/utm/mcs/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/ca/utoronto/utm/mcs/AppTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +61,7 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
   </component>
-  <component name="RunManager" selected="Maven.a1 [exec:java]">
+  <component name="RunManager" selected="JUnit.AppTest">
     <configuration name="AppTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
@@ -76,7 +77,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AppTest.addActorFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.addRelationshipFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
         <pattern>
@@ -86,13 +87,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
       <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="addActorFail" />
+      <option name="METHOD_NAME" value="addRelationshipFail" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AppTest.addActorPass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.getActorPass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
         <pattern>
@@ -102,13 +103,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
       <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="addActorPass" />
+      <option name="METHOD_NAME" value="getActorPass" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AppTest.addMovieFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.getMoviePass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
         <pattern>
@@ -118,13 +119,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
       <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="addMovieFail" />
+      <option name="METHOD_NAME" value="getMoviePass" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AppTest.addMoviePass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.hasRelationshipPass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
         <pattern>
@@ -134,7 +135,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
       <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="addMoviePass" />
+      <option name="METHOD_NAME" value="hasRelationshipPass" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -179,20 +180,20 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.Unnamed" />
-      <item itemvalue="JUnit.AppTest.addActorPass" />
-      <item itemvalue="JUnit.AppTest.addActorFail" />
       <item itemvalue="Maven.a1 [exec:java]" />
       <item itemvalue="JUnit.AppTest" />
-      <item itemvalue="JUnit.AppTest.addMoviePass" />
-      <item itemvalue="JUnit.AppTest.addMovieFail" />
+      <item itemvalue="JUnit.AppTest.addRelationshipFail" />
+      <item itemvalue="JUnit.AppTest.getActorPass" />
+      <item itemvalue="JUnit.AppTest.getMoviePass" />
+      <item itemvalue="JUnit.AppTest.hasRelationshipPass" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AppTest.addMovieFail" />
-        <item itemvalue="JUnit.AppTest.addMoviePass" />
         <item itemvalue="JUnit.AppTest" />
-        <item itemvalue="JUnit.AppTest.addActorPass" />
-        <item itemvalue="JUnit.AppTest.addActorFail" />
+        <item itemvalue="JUnit.AppTest.hasRelationshipPass" />
+        <item itemvalue="JUnit.AppTest.getMoviePass" />
+        <item itemvalue="JUnit.AppTest.getActorPass" />
+        <item itemvalue="JUnit.AppTest.addRelationshipFail" />
       </list>
     </recent_temporary>
   </component>

@@ -108,14 +108,15 @@ public class Neo4jDAO {
 	            if (checkDatabase(actorId, 0 ) == 1 || checkDatabase(movieId, 1 ) == 1){
 	                return 404;
 	            }
-                if (checkRelation(movieId, actorId)){
+                else if (checkRelation(movieId, actorId)){
                     return 400;
+                }else{
+                    String query = "MATCH (a: Actor), (m: Movie) WHERE a.actorId = '%s' AND m.movieId = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
+                    tx.run(query);
+                    tx.commit();
+                    return 200;
                 }
-	            String query = "MATCH (a: Actor), (m: Movie) WHERE a.actorId = '%s' AND m.movieId = '%s' CREATE (a)-[:ACTED_IN]->(m)".formatted(actorId, movieId);
-                tx.run(query);
-	            tx.commit();
-	            return 200;
-	            
+
 	        }catch(Exception e1){
 	            e1.printStackTrace();
 	            return 500;
