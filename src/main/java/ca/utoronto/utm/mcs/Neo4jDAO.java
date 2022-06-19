@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 import org.neo4j.driver.*;
+import java.io.IOException;
+import org.json.JSONException;
+import java.util.Collections;
 
 // NOTE: all your db transactions or queries should go in this class
 public class Neo4jDAO {
@@ -39,7 +42,7 @@ public class Neo4jDAO {
                 if (checkDatabase(movieId, 1 ) == 0){
                     return 400;
                 }
-                String query = "CREATE (m: Movie {name: '%s', movieId:'%s'})".formatted(name, movieId);
+                String query = "CREATE (m: Movie {name: '%s', id:'%s'})".formatted(name, movieId);
                 tx.run(query);
                 tx.commit();
                 return 200;
@@ -232,46 +235,88 @@ public class Neo4jDAO {
         }    
         return resultAsJsonStrings.get(0);
     }
-    public String computeBaconNumber(String reqActorId) {
-    	String query;
-        query = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN length(p)/2";
-        query = String.format(query, reqActorId);
-        Result result = this.session.run(query);
-        List<String> resultAsJsonStrings = new ArrayList<String>();
-        Record record;
-        JSONObject recordJson;
-        String recordJsonString;
-        while (result.hasNext()) {
-            record = result.next();
-            recordJson = new JSONObject(record.asMap());
-            recordJsonString = recordJson.toString();
-            resultAsJsonStrings.add(recordJsonString);
+    public String computeBaconNumber(String reqActorId) throws JSONException {
+    	String query1;
+        query1 = "MATCH (a {name: 'Kevin Bacon'}) RETURN a.actorId;";
+        Result result1 = this.session.run(query1);
+        List<JSONObject> resultAsJsonObjects1 = new ArrayList<JSONObject>();
+        Record record1;
+        JSONObject recordJson1;
+        while (result1.hasNext()) {
+            record1 = result1.next();
+            recordJson1 = new JSONObject(record1.asMap());
+            resultAsJsonObjects1.add(recordJson1);
         }    
-        return resultAsJsonStrings.get(0);
+        JSONObject kbIdJson = resultAsJsonObjects1.get(0);
+        String kbIdJsonVal = kbIdJson.getString("a.actorId");
+        if (kbIdJsonVal.equals(reqActorId)) {
+        	JSONObject j = new JSONObject();
+        	j.put("length(p)/2", "0");
+        	return j.toString();
+        } else {
+        	String query2;
+            query2 = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN length(p)/2";
+            query2 = String.format(query2, reqActorId);
+            Result result2 = this.session.run(query2);
+            List<String> resultAsJsonStrings2 = new ArrayList<String>();
+            Record record2;
+            JSONObject recordJson2;
+            String recordJsonString2;
+            while (result2.hasNext()) {
+                record2 = result2.next();
+                recordJson2 = new JSONObject(record2.asMap());
+                recordJsonString2 = recordJson2.toString();
+                resultAsJsonStrings2.add(recordJsonString2);
+            }
+            return resultAsJsonStrings2.get(0);
+        }
     }
-    public List<String> computeBaconPath(String reqActorId) {
-    	String query;
-        query = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN nodes(p)";
-        query = String.format(query, reqActorId);
-        Result result = this.session.run(query);
-        List<Record> resultAsRecords = new ArrayList<Record>();
-        Record record;
-        while (result.hasNext()) {
-            record = result.next();
-            resultAsRecords.add(record);
+    public List<String> computeBaconPath(String reqActorId) throws JSONException {
+    	String query1;
+        query1 = "MATCH (a {name: 'Kevin Bacon'}) RETURN a.actorId;";
+        Result result1 = this.session.run(query1);
+        List<JSONObject> resultAsJsonObjects1 = new ArrayList<JSONObject>();
+        Record record1;
+        JSONObject recordJson1;
+        while (result1.hasNext()) {
+            record1 = result1.next();
+            recordJson1 = new JSONObject(record1.asMap());
+            resultAsJsonObjects1.add(recordJson1);
         }
-        Record shortestPathRecord = resultAsRecords.get(0);
-        List<Value> shortestPathValueAsListInList = shortestPathRecord.values();
-        Value shortestPathValueAsList = shortestPathValueAsListInList.get(0);
-        List<String> r = new ArrayList<String>();
-        for (int i = 0; i < shortestPathValueAsList.size(); i++) {
-        	if ((i % 2) == 0) {
-        		r.add(shortestPathValueAsList.get(i).get("actorId").toString());
-        	} else {
-        		r.add(shortestPathValueAsList.get(i).get("movieId").toString());
-        	}
-        }
-        return r;
+        JSONObject kbIdJson = resultAsJsonObjects1.get(0);
+        String kbIdJsonVal = kbIdJson.getString("a.actorId");
+        if (kbIdJsonVal.equals(reqActorId)) {
+        	List<String> r1 = new ArrayList<String>();
+        	r1.add(kbIdJsonVal);
+        	return r1;
+        } else {
+	    	String query2;
+	        query2 = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN nodes(p)";
+	        query2 = String.format(query2, reqActorId);
+	        Result result2 = this.session.run(query2);
+	        List<Record> resultAsRecords2 = new ArrayList<Record>();
+	        Record record2;
+	        while (result2.hasNext()) {
+	            record2 = result2.next();
+	            resultAsRecords2.add(record2);
+	        }
+	        Record shortestPathRecord2 = resultAsRecords2.get(0);
+	        List<Value> shortestPathValueAsListInList2 = shortestPathRecord2.values();
+	        Value shortestPathValueAsList2 = shortestPathValueAsListInList2.get(0);
+	        List<String> r2 = new ArrayList<String>();
+	        for (int i = 0; i < shortestPathValueAsList2.size(); i++) {
+	        	if ((i % 2) == 0) {
+	        		r2.add(shortestPathValueAsList2.get(i).get("actorId").toString());
+	        	} else {
+	        		r2.add(shortestPathValueAsList2.get(i).get("movieId").toString());
+	        	}
+	        }
+	        Collections.reverse(r2);
+	        return r2;
+    	}
+
+
+
     }
     
     
