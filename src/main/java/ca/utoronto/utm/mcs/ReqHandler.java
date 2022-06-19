@@ -450,34 +450,20 @@ public class ReqHandler implements HttpHandler {
             }
     		// check for 200, 404:
     		try {
-    			List<Integer> queryResult = this.neodao.computeBaconPath(reqActorId);
+    			List<String> queryResult = this.neodao.computeBaconPath(reqActorId);
     			
-    			System.out.printf("queryResult: %s\n", queryResult.toString());
-    			
-    			List<String> s = new ArrayList<String>();
-//    			String v;
-//    			Integer vv;
-//    			for (int i = 0; i < queryResult.size(); i++) {
-//    				v = queryResult.get(i);
-//    				
-//    				System.out.printf("v: %s\n", v);
-//    				
-//    				vv = Integer.parseInt(v);
-//    				
-//    				System.out.printf("vv: %d\n", vv);
-//    				
-//    				s.add(vv.toString());
-//    			}
-//    			
-//    			System.out.printf("s: %s\n", s.toString());
-    			
+    			String[] queryResult2 = new String[queryResult.size()];
+    			for (int i = 0; i < queryResult.size(); i++) {
+    				queryResult2[i] = queryResult.get(i).replaceAll("^\"|\"$", "");
+    	        }
     			JSONObject resBody = new JSONObject();
-    			resBody.put("baconPath", s);
+    			resBody.put("baconPath", queryResult2);
                 byte[] res = resBody.toString().getBytes();
                 exchange.sendResponseHeaders(200, res.length);
                 OutputStream os = exchange.getResponseBody();
                 os.write(res);
                 os.close();
+                
             } catch (Exception e) {
                 exchange.sendResponseHeaders(404, -1);
                 return;

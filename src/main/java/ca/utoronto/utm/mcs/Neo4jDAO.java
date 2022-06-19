@@ -235,7 +235,7 @@ public class Neo4jDAO {
         }    
         return resultAsJsonStrings.get(0);
     }
-    public List<Integer> computeBaconPath(String reqActorId) {
+    public List<String> computeBaconPath(String reqActorId) {
     	String query;
         query = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN nodes(p)";
         query = String.format(query, reqActorId);
@@ -249,27 +249,12 @@ public class Neo4jDAO {
         Record shortestPathRecord = resultAsRecords.get(0);
         List<Value> shortestPathValueAsListInList = shortestPathRecord.values();
         Value shortestPathValueAsList = shortestPathValueAsListInList.get(0);
-        List<Integer> r = new ArrayList<Integer>();
-        
-        int v;
-        
+        List<String> r = new ArrayList<String>();
         for (int i = 0; i < shortestPathValueAsList.size(); i++) {
         	if ((i % 2) == 0) {
-        		
-        		v = Integer.parseInt(shortestPathValueAsList.get(i).get("actorId").toString());
-        		
-        		System.out.printf("v: %d\n", v);
-        		
-        		r.add(v);
-        		
+        		r.add(shortestPathValueAsList.get(i).get("actorId").toString());
         	} else {
-        		
-        		v = Integer.parseInt(shortestPathValueAsList.get(i).get("movieId").toString());
-        		
-        		System.out.printf("v: %d\n", v);
-        		
-        		r.add(v);
-        		
+        		r.add(shortestPathValueAsList.get(i).get("movieId").toString());
         	}
         }
         return r;
