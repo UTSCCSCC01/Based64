@@ -15,8 +15,6 @@ public class ReqHandler implements HttpHandler {
         this.neodao = neodao;
     }
 	
-	
-	
     // TODO (finish the class below to cover all cases):
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -42,8 +40,19 @@ public class ReqHandler implements HttpHandler {
                     		this.computeBaconPath(exchange);
                     		return;
                     	}
-	                case "POST":
-	                    //this.handlePost(exchange);
+	                case "put":
+                    	if (uriParts[3].equals("addActor")) {
+                    		this.addActor(exchange);
+                    		return;
+                    	} else if (uriParts[3].equals("addMovie")) {
+                    		this.addMovie(exchange);
+                    		return;
+                    	} else if (uriParts[3].equals("addRelationship")) {
+                    		this.addRelationship(exchange);
+                    		return;
+                    	}
+// 			System.out.println("exchange.method "+ exchange.getRequestMethod());
+	                    // this.handlePut(exchange);
 	                default:
 	                	exchange.sendResponseHeaders(500, -1);
 	                    return;
@@ -57,11 +66,8 @@ public class ReqHandler implements HttpHandler {
             e.printStackTrace();
         }
     }
-    public void handlePut(HttpExchange exchange) throws IOException, JSONException {
-        try{
-            // Add actor
-            if (exchange.getRequestURI().toString().equals("/api/v1/addActor")){
-                String body = Utils.convert(exchange.getRequestBody());
+        public void addActor(HttpExchange exchange) throws IOException, JSONException {
+        String body = Utils.convert(exchange.getRequestBody());
                 try {
                     JSONObject deserialized = new JSONObject(body);
                     String name, actorId;
@@ -78,12 +84,10 @@ public class ReqHandler implements HttpHandler {
                 }catch(JSONException e1){
                     exchange.sendResponseHeaders(400, -1);
                 }
+    }
 
-
-            }
-            // Add movie
-            else if (exchange.getRequestURI().toString().equals("/api/v1/addMovie")){
-                String body = Utils.convert(exchange.getRequestBody());
+    public void addMovie(HttpExchange exchange) throws IOException, JSONException {
+        String body = Utils.convert(exchange.getRequestBody());
                 try {
                     JSONObject deserialized = new JSONObject(body);
                     String name, movieId;
@@ -100,11 +104,10 @@ public class ReqHandler implements HttpHandler {
                 }catch(JSONException e1){
                     exchange.sendResponseHeaders(400, -1);
                 }
+    }
 
-            }
-            // Add Relationship
-            else if(exchange.getRequestURI().toString().equals("/api/v1/addRelationship")){
-                String body = Utils.convert(exchange.getRequestBody());
+    public void addRelationship(HttpExchange exchange) throws IOException, JSONException{
+        String body = Utils.convert(exchange.getRequestBody());
                 try {
                     JSONObject deserialized = new JSONObject(body);
                     String actorId, movieId;
@@ -121,14 +124,76 @@ public class ReqHandler implements HttpHandler {
                 }catch(JSONException e1){
                     exchange.sendResponseHeaders(400, -1);
                 }
-            }
-            else{
-                exchange.sendResponseHeaders(404, -1);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            exchange.sendResponseHeaders(500, -1);
-        }
+    }
+/*  // public void handlePut(HttpExchange exchange) throws IOException, JSONException {
+        //     try{
+        //         // Add actor
+        //         if (exchange.getRequestURI().toString().equals("/api/v1/addActor")){
+        //             String body = Utils.convert(exchange.getRequestBody());
+        //             try {
+        //                 JSONObject deserialized = new JSONObject(body);
+        //                 String name, actorId;
+        //                 if(!deserialized.has("name") || !deserialized.has("actorId") ){
+        //                     exchange.sendResponseHeaders(400, -1);
+        //                 }else{
+        //                     name = deserialized.getString("name");
+        //                     actorId = deserialized.getString("name");
+        //                     int rcode = neodao.addActor(name, actorId);
+        //                     exchange.sendResponseHeaders(rcode, -1);
+        //                 }
+        //             }catch(JSONException e1){
+        //                 exchange.sendResponseHeaders(400, -1);
+        //             }
+        //         }
+        //         // Add movie
+        //         else if (exchange.getRequestURI().toString().equals("/api/v1/addMovie")){
+        //             String body = Utils.convert(exchange.getRequestBody());
+        //             try {
+        //                 JSONObject deserialized = new JSONObject(body);
+        //                 String name, movieId;
+        //                 if(!deserialized.has("name") || !deserialized.has("movieID") ){
+        //                     exchange.sendResponseHeaders(400, -1);
+        //                 }else{
+        //                     name = deserialized.getString("name");
+        //                     movieId = deserialized.getString("movieId");
+        //                     int rcode = neodao.addMovie(name, movieId);
+        //                     exchange.sendResponseHeaders(rcode, -1);
+        //                 }
+        //             }catch(JSONException e1){
+        //                 exchange.sendResponseHeaders(400, -1);
+        //             }
+        //         }
+        //         // Add Relationship
+        //         else if(exchange.getRequestURI().toString().equals("/api/v1/addRelationship")){
+        //             String body = Utils.convert(exchange.getRequestBody());
+        //             try {
+        //                 JSONObject deserialized = new JSONObject(body);
+        //                 String actorId, movieId;
+        //                 if(!deserialized.has("actorId") || !deserialized.has("movieID") ){
+        //                     exchange.sendResponseHeaders(400, -1);
+        //                 }else{
+        //                     actorId = deserialized.getString("actorId");
+        //                     movieId = deserialized.getString("movieId");
+        //                     int rcode = neodao.addRelationship(actorId, movieId);
+        //                     exchange.sendResponseHeaders(rcode, -1);
+        //                 }
+        //             }catch(JSONException e1){
+        //                 exchange.sendResponseHeaders(400, -1);
+        //             }
+        //         }
+        //         else{
+        //             exchange.sendResponseHeaders(404, -1);
+        //         }
+        //     } catch (Exception e){
+        //         e.printStackTrace();
+        //         exchange.sendResponseHeaders(500, -1);
+        //     }
+    // }
+ */
+  
+
+
+
     /**
  	GET /api/v1/getActor
 	@param none
