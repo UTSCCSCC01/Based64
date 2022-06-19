@@ -11,7 +11,7 @@ public class ReqHandlerModule {
 	private String password = "123456";
 	@Provides
 	public Neo4jDAO provideNeo4jDAO() {
-		return new Neo4jDAO( uriDb, username, password);
+		return new Neo4jDAO(GraphDatabase.driver(uriDb, AuthTokens.basic(username, password)));
 	}
 	/*
 	@Provides
