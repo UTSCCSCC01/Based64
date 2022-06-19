@@ -5,7 +5,9 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import java.io.OutputStream;
+import java.util.List;
 public class ReqHandler implements HttpHandler {
 	private Neo4jDAO neodao;
 	@Inject
@@ -203,9 +205,43 @@ public class ReqHandler implements HttpHandler {
 	@return 200 OK (success), 400 BAD REQUEST (req body is improperly formatted OR missing req info), 404 NOT FOUND (when the actor DNE for the req OR there DNE a path from them to Kevin Bacon), 500 INTERNAL SERVER ERROR [failure (i.e. Java exception thrown)]
 	Check the bacon number of an actor. Note that Kevin Bacon has a bacon number of 0.
 	Edge case: none
+	Try: `curl -v -X GET -d '{"actorId": "1"}' http://localhost:8081/api/v1/computeBaconNumber`
     */
 	public void computeBaconNumber(HttpExchange exchange) throws IOException, JSONException {
-		// TODO
+		try {
+    		// check for 400:
+    		String reqBody = Utils.convert(exchange.getRequestBody());
+    		JSONObject deserReqBody = new JSONObject(reqBody);
+    		String reqActorId;
+    		if (deserReqBody.length() == 1 && deserReqBody.has("actorId")) {
+    			reqActorId = deserReqBody.getString("actorId");
+    		} else {
+                exchange.sendResponseHeaders(400, -1); // -1 indicates this response has no body
+                return;
+            }
+    		// check for 200, 404:
+    		try {
+    			String queryResult = this.neodao.computeBaconNumber(reqActorId);
+    			JSONObject deserResBody = new JSONObject(queryResult);
+        		String baconNumberStr;
+        		if (deserResBody.length() == 1 && deserResBody.has("length(p)/2")) {
+        			baconNumberStr = deserResBody.getString("length(p)/2");
+                    exchange.sendResponseHeaders(200, baconNumberStr.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(baconNumberStr.getBytes());
+                    os.close();
+        		} else {
+                    exchange.sendResponseHeaders(500, -1);
+                    return;
+                }
+            } catch (Exception e) {
+                exchange.sendResponseHeaders(404, -1);
+                return;
+            }
+        } catch (Exception e) {
+        	exchange.sendResponseHeaders(500, -1);
+            return;
+        }
 	}
     /**
 	GET /api/v1/computeBaconPath
@@ -220,7 +256,36 @@ public class ReqHandler implements HttpHandler {
 	3) Kevin Bacon's baconPath should be a list with just his actorId in it
     */
 	public void computeBaconPath(HttpExchange exchange) throws IOException, JSONException {
-		// TODO
+		try {
+    		// check for 400:
+    		String reqBody = Utils.convert(exchange.getRequestBody());
+    		JSONObject deserReqBody = new JSONObject(reqBody);
+    		String reqActorId;
+    		if (deserReqBody.length() == 1 && deserReqBody.has("actorId")) {
+    			reqActorId = deserReqBody.getString("actorId");
+    		} else {
+                exchange.sendResponseHeaders(400, -1); // -1 indicates this response has no body
+                return;
+            }
+    		// check for 200, 404:
+    		try {
+    			List<String> queryResult = this.neodao.computeBaconPath(reqActorId);
+    			String queryResultStr = queryResult.toString();
+    			JSONArray r = new JSONArray(queryResult);
+    			JSONObject o = new JSONObject();
+    			o.put("baconPath", r);
+                exchange.sendResponseHeaders(200, queryResultStr.length());
+                OutputStream os = exchange.getResponseBody();
+                os.write(queryResultStr.getBytes());
+                os.close();
+            } catch (Exception e) {
+                exchange.sendResponseHeaders(404, -1);
+                return;
+            }
+        } catch (Exception e) {
+        	exchange.sendResponseHeaders(500, -1);
+            return;
+        }
 	}
 	
 	

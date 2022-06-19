@@ -1,11 +1,20 @@
 package ca.utoronto.utm.mcs;
 import javax.inject.Inject;
 import org.neo4j.driver.Record;
+import org.neo4j.driver.types.Node;
+
 import java.util.List;
+import java.util.Map;
+import java.io.OutputStream;
+import java.security.KeyStore.Entry;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.json.JSONObject;
 import org.neo4j.driver.util.Pair;
 import org.neo4j.driver.*;
+import java.io.IOException;
+import org.json.JSONException;
 // NOTE: all your db transactions or queries should go in this class
 public class Neo4jDAO {
 	/*
@@ -62,7 +71,6 @@ public class Neo4jDAO {
         return resultAsJsonStrings.get(0);
     }
     public String hasRelationship(String reqMovieId, String reqActorId) {
-    	// TODO:
     	String query;
         query = "MATCH (m {movieId: \"%s\"}), (a {actorId: \"%s\"}) RETURN m.movieId, a.actorId, EXISTS((m)<-[:ACTED_IN]-(a));";
         query = String.format(query, reqMovieId, reqActorId);
@@ -78,6 +86,47 @@ public class Neo4jDAO {
             resultAsJsonStrings.add(recordJsonString);
         }    
         return resultAsJsonStrings.get(0);
+    }
+    public String computeBaconNumber(String reqActorId) {
+    	String query;
+        query = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN length(p)/2";
+        query = String.format(query, reqActorId);
+        Result result = this.session.run(query);
+        List<String> resultAsJsonStrings = new ArrayList<String>();
+        Record record;
+        JSONObject recordJson;
+        String recordJsonString;
+        while (result.hasNext()) {
+            record = result.next();
+            recordJson = new JSONObject(record.asMap());
+            recordJsonString = recordJson.toString();
+            resultAsJsonStrings.add(recordJsonString);
+        }    
+        return resultAsJsonStrings.get(0);
+    }
+    public List<String> computeBaconPath(String reqActorId) {
+    	String query;
+        query = "MATCH (a1:Actor {name: 'Kevin Bacon'}), (a2:Actor {actorId: \"%s\"}), p = shortestPath((a1)-[:ACTED_IN*]-(a2)) RETURN nodes(p)";
+        query = String.format(query, reqActorId);
+        Result result = this.session.run(query);
+        List<Record> resultAsRecords = new ArrayList<Record>();
+        Record record;
+        while (result.hasNext()) {
+            record = result.next();
+            resultAsRecords.add(record);
+        }
+        Record shortestPathRecord = resultAsRecords.get(0);
+        List<Value> shortestPathValueAsListInList = shortestPathRecord.values();
+        Value shortestPathValueAsList = shortestPathValueAsListInList.get(0);
+        List<String> r = new ArrayList<String>();
+        for (int i = 0; i < shortestPathValueAsList.size(); i++) {
+        	if ((i % 2) == 0) {
+        		r.add(shortestPathValueAsList.get(i).get("actorId").toString());
+        	} else {
+        		r.add(shortestPathValueAsList.get(i).get("movieId").toString());
+        	}
+        }
+        return r;
     }
     
     
