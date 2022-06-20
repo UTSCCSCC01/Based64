@@ -31,7 +31,7 @@ public class AppTest {
         s.setupServer();
     }
 
-    final static String API_URL = "http://localhost:8080";
+    final static String API_URL = "http://localhost:8081";
     final static String Path = "/api/v1";
     private static HttpResponse<String> sendRequest(String endpoint, String method, String reqBody) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
