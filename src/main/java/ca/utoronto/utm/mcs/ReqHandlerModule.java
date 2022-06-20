@@ -1,12 +1,25 @@
 package ca.utoronto.utm.mcs;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.AuthTokens;
 import dagger.Module;
 import dagger.Provides;
 @Module
 public class ReqHandlerModule {
+	private String uriDb = "bolt://localhost:7687";
+	private String username = "neo4j";
+	private String password = "123456";
 	@Provides
 	public Neo4jDAO provideNeo4jDAO() {
-		return new Neo4jDAO("bolt://localhost:7687", "neo4j", "123456");
+		return new Neo4jDAO(GraphDatabase.driver(uriDb, AuthTokens.basic(username, password)));
 	}
+	/*
+	@Provides
+	public Driver provideDriver() {
+		return GraphDatabase.driver(uriDb, AuthTokens.basic(username, password));
+	}
+	*/
 }
+// module for server like components
 
 

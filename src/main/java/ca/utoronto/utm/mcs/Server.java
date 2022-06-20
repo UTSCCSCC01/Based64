@@ -1,9 +1,8 @@
 package ca.utoronto.utm.mcs;
-import javax.inject.Inject;
 import com.sun.net.httpserver.HttpServer;
-import java.net.InetSocketAddress;
-import java.io.IOException;
+import javax.inject.Inject;
 public class Server {
+	/*
 	private Config config;
 	private ReqHandler reqHandler;
 	private HttpServer server;
@@ -22,6 +21,16 @@ public class Server {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+	*/
+	private HttpServer server;
+	@Inject
+	public Server(HttpServer server) {
+		this.server = server;
+	}
+	public void setupServer() {
+		this.server.start();
+		System.out.printf("Server started on port %d\n", this.server.getAddress().getPort());
 	}
 }
 
