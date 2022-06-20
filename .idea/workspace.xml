@@ -4,64 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ed1baed-ccab-4f8d-89c6-c7438a0ca1ac" name="Changes" comment="Adding Testcases">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/Neo4jDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/Neo4jDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/Neo4jDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/Neo4jDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ReqHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ca/utoronto/utm/mcs/ReqHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/ca/utoronto/utm/mcs/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/ca/utoronto/utm/mcs/AppTest.class" afterDir="false" />
-    </list>
+    <list default="true" id="9ed1baed-ccab-4f8d-89c6-c7438a0ca1ac" name="Changes" comment="Finished all Testcases" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodeStyleSettingsInfer">
-    <option name="done" value="true" />
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="TestCases" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
-  </component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="0f2c4b4b-c08f-45e7-ad33-813ae26d4657" />
-        <option name="url" value="https://github.com/UTSCCSCC01/a1s22-based64" />
-      </UrlAndAccount>
-    </option>
-  </component>
-  <component name="ProjectCodeStyleSettingsMigration">
-    <option name="version" value="2" />
-  </component>
-  <component name="ProjectId" id="2AjldWbzglx4oCViv3BnuEDCiJ4" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
-  </component>
   <component name="RunManager" selected="JUnit.AppTest">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.App" />
+      <module name="a1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ca.utoronto.utm.mcs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="AppTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
@@ -77,7 +47,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AppTest.addRelationshipFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.addActorFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
         <pattern>
@@ -87,13 +57,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
       <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="addRelationshipFail" />
+      <option name="METHOD_NAME" value="addActorFail" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AppTest.getActorPass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.addActorPass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="a1" />
       <extension name="coverage">
         <pattern>
@@ -103,124 +73,28 @@
       </extension>
       <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
       <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="getActorPass" />
+      <option name="METHOD_NAME" value="addActorPass" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="AppTest.getMoviePass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="a1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ca.utoronto.utm.mcs.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
-      <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="getMoviePass" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AppTest.hasRelationshipPass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="a1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ca.utoronto.utm.mcs.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ca.utoronto.utm.mcs" />
-      <option name="MAIN_CLASS_NAME" value="ca.utoronto.utm.mcs.AppTest" />
-      <option name="METHOD_NAME" value="hasRelationshipPass" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Unnamed" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
-      <module name="a1" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../../../../../../../Program Files/Java/jdk-16.0.1" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="a1 [exec:java]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
-      <MavenSettings>
-        <option name="myGeneralSettings" />
-        <option name="myRunnerSettings" />
-        <option name="myRunnerParameters">
-          <MavenRunnerParameters>
-            <option name="profiles">
-              <set />
-            </option>
-            <option name="goals">
-              <list>
-                <option value="exec:java" />
-              </list>
-            </option>
-            <option name="pomFileName" />
-            <option name="profilesMap">
-              <map />
-            </option>
-            <option name="resolveToWorkspace" value="false" />
-            <option name="workingDirPath" value="$PROJECT_DIR$" />
-          </MavenRunnerParameters>
-        </option>
-      </MavenSettings>
-      <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.Unnamed" />
-      <item itemvalue="Maven.a1 [exec:java]" />
+      <item itemvalue="Application.App" />
+      <item itemvalue="JUnit.AppTest.addActorFail" />
+      <item itemvalue="JUnit.AppTest.addActorPass" />
       <item itemvalue="JUnit.AppTest" />
-      <item itemvalue="JUnit.AppTest.addRelationshipFail" />
-      <item itemvalue="JUnit.AppTest.getActorPass" />
-      <item itemvalue="JUnit.AppTest.getMoviePass" />
-      <item itemvalue="JUnit.AppTest.hasRelationshipPass" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.AppTest" />
-        <item itemvalue="JUnit.AppTest.hasRelationshipPass" />
-        <item itemvalue="JUnit.AppTest.getMoviePass" />
-        <item itemvalue="JUnit.AppTest.getActorPass" />
-        <item itemvalue="JUnit.AppTest.addRelationshipFail" />
+        <item itemvalue="JUnit.AppTest.addActorFail" />
+        <item itemvalue="JUnit.AppTest.addActorPass" />
+        <item itemvalue="Application.App" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="9ed1baed-ccab-4f8d-89c6-c7438a0ca1ac" name="Changes" comment="" />
-      <created>1655530972957</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1655530972957</updated>
-    </task>
-    <task id="LOCAL-00001" summary="Fixed Bugs">
-      <created>1655665652909</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1655665652910</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Adding Testcases">
-      <created>1655672336390</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1655672336390</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -228,23 +102,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="CUSTOM_BOOLEAN_PROPERTIES">
-                <map>
-                  <entry key="Show.Git.Branches" value="true" />
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed Bugs" />
-    <MESSAGE value="Adding Testcases" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding Testcases" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -252,7 +115,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/ReqHandler.java</url>
           <line>21</line>
-          <properties class="ca.utoronto.utm.mcs.ReqHandler" method="handle">
+          <properties class="ca.utoronto.utm.mcs.ReqHandler">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="2" />
@@ -266,6 +129,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/ca/utoronto/utm/mcs/ReqHandler.java</url>
           <line>91</line>
           <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/ca/utoronto/utm/mcs/AppTest.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

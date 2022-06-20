@@ -31,7 +31,7 @@ public class AppTest {
         s.setupServer();
     }
 
-    final static String API_URL = "http://localhost:8081";
+    final static String API_URL = "http://localhost:8080";
     final static String Path = "/api/v1";
     private static HttpResponse<String> sendRequest(String endpoint, String method, String reqBody) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
@@ -48,7 +48,7 @@ public class AppTest {
     @Order(1)
     public void addActorPass() throws JSONException, IOException, InterruptedException { //200
         JSONObject rq = new JSONObject();
-        rq.put("name", "Johnny Depp");
+        rq.put("name", "Kevin Bacon");
         rq.put("actorId", "21");
         HttpResponse<String> confirmRes = sendRequest("addActor", "PUT", rq.toString());
         assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
@@ -74,7 +74,7 @@ public class AppTest {
     @Order(2)
     public void addActorFail() throws JSONException, IOException, InterruptedException { //400
         JSONObject rq = new JSONObject();
-        rq.put("name", "Johnny Depp");
+        rq.put("name", "Kevin Bacon");
         rq.put("actorId", "21");
         HttpResponse<String> confirmRes = sendRequest("addActor", "PUT", rq.toString());
         assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
@@ -137,7 +137,7 @@ public class AppTest {
         rq.put("actorId", "21");
         HttpResponse<String> confirmRes = sendRequest("getActor", "GET", rq.toString());
         assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
-        assertEquals("{\"movies\":[\"22\"],\"actorId\":\"21\",\"name\":\"Johnny Depp\"}", confirmRes.body());
+        assertEquals("{\"movies\":[\"22\"],\"actorId\":\"21\",\"name\":\"Kevin Bacon\"}", confirmRes.body());
     }
     @Test
     @Order(9)
@@ -217,23 +217,61 @@ public class AppTest {
     //--------------------------------
     // Compute
     //--------------------------------
-//    @Test
-//    public void computeBaconNumberPass() { //200
-//        assertTrue(true);
-//    }
-//    @Test
-//    public void computeBaconNumberFail() { //400,404
-//        assertTrue(true);
-//    }
-//    //--------------------------------
-//    @Test
-//    public void computeBaconPathPass() { //200
-//        assertTrue(true);
-//    }
-//    @Test
-//    public void computeBaconPathFail() { //400,404
-//        assertTrue(true);
-//    }
+    @Test
+    @Order(17)
+    public void computeBaconNumberPass() throws JSONException, IOException, InterruptedException { //200
+        JSONObject rq = new JSONObject();
+        rq.put("actorId", "21");
+        HttpResponse<String> confirmRes = sendRequest("computeBaconNumber", "GET", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
+        assertEquals("{\"baconNumber\":0}", confirmRes.body());
+    }
+    @Test
+    @Order(18)
+    public void computeBaconNumberFail() throws JSONException, IOException, InterruptedException { //404
+        JSONObject rq = new JSONObject();
+        rq.put("actorId", "212");
+        HttpResponse<String> confirmRes = sendRequest("computeBaconNumber", "GET", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_NOT_FOUND, confirmRes.statusCode());
+//        assertEquals("{\"baconNumber\":0}", confirmRes.body());
+    }
+    @Test
+    @Order(19)
+    public void computeBaconNumberFail400() throws JSONException, IOException, InterruptedException { //400
+        JSONObject rq = new JSONObject();
+        rq.put("actId", "212");
+        HttpResponse<String> confirmRes = sendRequest("computeBaconNumber", "GET", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
+//        assertEquals("{\"baconNumber\":0}", confirmRes.body());
+    }
+    //--------------------------------
+    @Test
+    @Order(20)
+    public void computeBaconPathPass() throws JSONException, IOException, InterruptedException { //200
+        JSONObject rq = new JSONObject();
+        rq.put("actorId", "21");
+        HttpResponse<String> confirmRes = sendRequest("computeBaconPath", "GET", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_OK, confirmRes.statusCode());
+        assertEquals("{\"baconPath\":[\"21\"]}", confirmRes.body());
+    }
+    @Test
+    @Order(21)
+    public void computeBaconPathFail() throws JSONException, IOException, InterruptedException { //404
+        JSONObject rq = new JSONObject();
+        rq.put("actorId", "212");
+        HttpResponse<String> confirmRes = sendRequest("computeBaconPath", "GET", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_NOT_FOUND, confirmRes.statusCode());
+//        assertEquals("{\"baconPath\":[\"21\"]}", confirmRes.body());
+    }
+    @Test
+    @Order(22)
+    public void computeBaconPathFail400() throws JSONException, IOException, InterruptedException { //404
+        JSONObject rq = new JSONObject();
+        rq.put("acrId", "212");
+        HttpResponse<String> confirmRes = sendRequest("computeBaconPath", "GET", rq.toString());
+        assertEquals(HttpURLConnection.HTTP_BAD_REQUEST, confirmRes.statusCode());
+//        assertEquals("{\"baconPath\":[\"21\"]}", confirmRes.body());
+    }
     //--------------------------------
 
 }

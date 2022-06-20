@@ -42,7 +42,7 @@ public class Neo4jDAO {
                 if (checkDatabase(movieId, 1 ) == 0){
                     return 400;
                 }
-                String query = "CREATE (m: Movie {name: '%s', id:'%s'})".formatted(name, movieId);
+                String query = "CREATE (m: Movie {name: '%s', movieId:'%s'})".formatted(name, movieId);
                 tx.run(query);
                 tx.commit();
                 return 200;
