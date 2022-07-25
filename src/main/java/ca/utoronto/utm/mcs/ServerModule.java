@@ -21,8 +21,8 @@ public class ServerModule {
 	*/
 	@Provides
 	public HttpServer provideServer() {
-		final int port = 8081;
-		final String hostname = "0.0.0.0";
+		final int port = 8080;
+		final String hostname = "assignment";
 		final int backlog = 0;
 		final String contextPath = "/api";
 		ReqHandlerComponent reqHandlerComponent = DaggerReqHandlerComponent.create();
