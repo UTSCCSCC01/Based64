@@ -6,7 +6,11 @@ import dagger.Module;
 import dagger.Provides;
 @Module
 public class ReqHandlerModule {
-	private String uriDb = "bolt://localhost:7687";
+	Dotenv dotenv = Dotenv.load();
+	String addr = dotenv.get("NEO4J_ADDR");
+	String uriDb = "bolt://" + addr + ":7687";
+	
+// 	private String uriDb = "bolt://localhost:7687";
 	private String username = "neo4j";
 	private String password = "123456";
 	@Provides
